@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
@@ -17,6 +18,11 @@ class Item extends Model
     public function objeto() : BelongsTo
     {
         return $this->belongsTo(Objeto::class);
+    }
+
+    public function cotas() : HasMany
+    {
+        return $this->hasMany(Cota::class);
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Arp;
+use App\Models\Item;
 use App\Models\Perpage;
 use App\Models\Log;
 
@@ -100,7 +101,8 @@ class ArpController extends Controller
         $this->authorize('arp-edit');
 
         return view('arps.edit', [
-            'arp' => $arp
+            'arp' => $arp,
+            'items' => Item::where('arp_id', $arp->id)->orderBy('id', 'asc')->get()
         ]);
     }
 

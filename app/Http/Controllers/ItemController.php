@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Log;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -28,7 +29,25 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('item-create');
+
+        $item = $request->validate([
+            'arp_id' => 'required|int|exists:arps,id',
+            'objeto_id' => 'required|int|exists:objetos,id',
+        ]);
+
+        $new_item = Item::create($item);
+
+        // LOG
+        Log::create([
+            'model_id' => $new_item->id,
+            'model' => 'Item',
+            'action' => 'store',
+            'changes' => json_encode($new_item),
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect(route('arps.edit', $new_item->arp_id))->with('message','Objeto adicionado ao arp com sucesso!');
     }
 
     /**

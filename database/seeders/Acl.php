@@ -88,6 +88,20 @@ class Acl extends Seeder
         $arp_delete = Permission::where('name', '=', 'arp-delete')->get()->first();
         $arp_show = Permission::where('name', '=', 'arp-show')->get()->first();
         $arp_export = Permission::where('name', '=', 'arp-export')->get()->first();
+        // para item
+        $item_index = Permission::where('name', '=', 'item-index')->get()->first();
+        $item_create = Permission::where('name', '=', 'item-create')->get()->first();
+        $item_edit = Permission::where('name', '=', 'item-edit')->get()->first();
+        $item_delete = Permission::where('name', '=', 'item-delete')->get()->first();
+        $item_show = Permission::where('name', '=', 'item-show')->get()->first();
+        $item_export = Permission::where('name', '=', 'item-export')->get()->first();
+        // para cota
+        $cota_index = Permission::where('name', '=', 'cota-index')->get()->first();
+        $cota_create = Permission::where('name', '=', 'cota-create')->get()->first();
+        $cota_edit = Permission::where('name', '=', 'cota-edit')->get()->first();
+        $cota_delete = Permission::where('name', '=', 'cota-delete')->get()->first();
+        $cota_show = Permission::where('name', '=', 'cota-show')->get()->first();
+        $cota_export = Permission::where('name', '=', 'cota-export')->get()->first();
 
 
         // salva os relacionamentos entre perfil e suas permissões
@@ -133,6 +147,18 @@ class Acl extends Seeder
         $administrador_perfil->permissions()->attach($arp_delete);
         $administrador_perfil->permissions()->attach($arp_show);
         $administrador_perfil->permissions()->attach($arp_export);
+        $administrador_perfil->permissions()->attach($item_index);
+        $administrador_perfil->permissions()->attach($item_create);
+        $administrador_perfil->permissions()->attach($item_edit);
+        $administrador_perfil->permissions()->attach($item_delete);
+        $administrador_perfil->permissions()->attach($item_show);
+        $administrador_perfil->permissions()->attach($item_export);
+        $administrador_perfil->permissions()->attach($cota_index);
+        $administrador_perfil->permissions()->attach($cota_create);
+        $administrador_perfil->permissions()->attach($cota_edit);
+        $administrador_perfil->permissions()->attach($cota_delete);
+        $administrador_perfil->permissions()->attach($cota_show);
+        $administrador_perfil->permissions()->attach($cota_export);
 
 
 
@@ -162,6 +188,16 @@ class Acl extends Seeder
         $gerente_perfil->permissions()->attach($arp_edit);
         $gerente_perfil->permissions()->attach($arp_show);
         $gerente_perfil->permissions()->attach($arp_export);
+        $gerente_perfil->permissions()->attach($item_index);
+        $gerente_perfil->permissions()->attach($item_create);
+        $gerente_perfil->permissions()->attach($item_edit);
+        $gerente_perfil->permissions()->attach($item_show);
+        $gerente_perfil->permissions()->attach($item_export);
+        $gerente_perfil->permissions()->attach($cota_index);
+        $gerente_perfil->permissions()->attach($cota_create);
+        $gerente_perfil->permissions()->attach($cota_edit);
+        $gerente_perfil->permissions()->attach($cota_show);
+        $gerente_perfil->permissions()->attach($cota_export);
 
 
 
@@ -184,6 +220,16 @@ class Acl extends Seeder
         $operador_perfil->permissions()->attach($arp_edit);
         $operador_perfil->permissions()->attach($arp_show);
         $operador_perfil->permissions()->attach($arp_export);
+        $operador_perfil->permissions()->attach($item_index);
+        $operador_perfil->permissions()->attach($item_create);
+        $operador_perfil->permissions()->attach($item_edit);
+        $operador_perfil->permissions()->attach($item_show);
+        $operador_perfil->permissions()->attach($item_export);
+        $operador_perfil->permissions()->attach($cota_index);
+        $operador_perfil->permissions()->attach($cota_create);
+        $operador_perfil->permissions()->attach($cota_edit);
+        $operador_perfil->permissions()->attach($cota_show);
+        $operador_perfil->permissions()->attach($cota_export);
 
 
         // leitura é um tipo de operador que só pode ler
@@ -196,6 +242,10 @@ class Acl extends Seeder
         $leitor_perfil->permissions()->attach($objeto_show);
         $leitor_perfil->permissions()->attach($arp_index);
         $leitor_perfil->permissions()->attach($arp_show);
+        $leitor_perfil->permissions()->attach($item_index);
+        $leitor_perfil->permissions()->attach($item_show);
+        $leitor_perfil->permissions()->attach($cota_index);
+        $leitor_perfil->permissions()->attach($cota_show);
 
 
 

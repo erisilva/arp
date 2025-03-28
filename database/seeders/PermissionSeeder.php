@@ -183,5 +183,58 @@ class PermissionSeeder extends Seeder
             'name' => 'arp-export',
             'description' => 'Exportação de dados das arps',
         ]);
+
+        // Permissões para a classe Item
+        DB::table('permissions')->insert([
+            'name' => 'item-index',
+            'description' => 'Lista de itens',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'item-create',
+            'description' => 'Registrar novo objeto ao arp',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'item-edit',
+            'description' => 'Alterar dados do item',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'item-delete',
+            'description' => 'Excluir item',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'item-show',
+            'description' => 'Mostrar dados do item',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'item-export',
+            'description' => 'Exportação de dados dos itens',
+        ]);
+
+        // Permissões para a classe Cota
+        DB::table('permissions')->insert([
+            'name' => 'cota-index',
+            'description' => 'Lista de cotas',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'cota-create',
+            'description' => 'Registrar nova cota',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'cota-edit',
+            'description' => 'Alterar dados da cota',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'cota-delete',
+            'description' => 'Excluir cota',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'cota-show',
+            'description' => 'Mostrar dados da cota',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'cota-export',
+            'description' => 'Exportação de dados das cotas',
+        ]);
+
     }
 }

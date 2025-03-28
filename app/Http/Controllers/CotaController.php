@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cota;
+use App\Models\Log;
 use Illuminate\Http\Request;
 
 class CotaController extends Controller
@@ -28,7 +29,26 @@ class CotaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('cota-create');
+
+        $cota = $request->validate([
+            'item_id' => 'required|int|exists:items,id',
+            'setor_id' => 'required|int|exists:setors,id',
+            'quantidade' => 'required|int|min:1',
+        ]);
+
+        $new_cota = Cota::create($cota);
+
+        // LOG
+        Log::create([
+            'model_id' => $new_cota->id,
+            'model' => 'Cota',
+            'action' => 'store',
+            'changes' => json_encode($new_cota),
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect(route('arps.edit', $new_cota->item->arp_id))->with('message','Cota adicionada ao setor com sucesso!');
     }
 
     /**
@@ -58,8 +78,29 @@ class CotaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cota $cota)
+    public function destroy(Request $request, Cota $cota)
     {
-        //
+        $this->authorize('cota-delete');
+
+        $input = $request->validate([
+            'arp_id' => 'required|int|exists:arps,id',
+            'cota_id' => 'required|int|exists:cotas,id'
+        ]);
+
+        $cota = Cota::find($input['cota_id']);
+
+        // LOG
+        Log::create([
+            'model_id' => $cota->id,
+            'model' => 'Cota',
+            'action' => 'delete',
+            'changes' => json_encode($cota),
+            'user_id' => auth()->id(),
+        ]);
+
+        $cota->delete();
+
+        return redirect(route('arps.edit', $input['arp_id']))->with('message','Cota removida com sucesso!');
     }
+
 }

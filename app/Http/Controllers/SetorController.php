@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Setor;
 use App\Models\Perpage;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Log;
+use Illuminate\Support\Facades\DB;
 
 class SetorController extends Controller
 {
@@ -186,4 +188,30 @@ class SetorController extends Controller
             'dataset' => Setor::orderBy('sigla', 'asc')->get()
         ])->download('Setores_' . date("Y-m-d H:i:s") . '.pdf');
     }
+
+    /**
+     * Função de autocompletar para ser usada pelo typehead
+     *
+     * @param
+     * @return json
+     */
+    public function autocomplete(Request $request) : \Illuminate\Http\JsonResponse
+    {
+        $this->authorize('setor-index'); // verifica se o usuário possui acesso para listar
+
+        $setors = DB::table('setors');
+
+        // select
+        $setors = $setors->select('descricao as text', 'id as value', 'sigla as sigla');
+
+        //where
+        $setors = $setors->where("descricao","LIKE","%{$request->input('query')}%");
+        $setors = $setors->orWhere("sigla","LIKE","%{$request->input('query')}%");
+
+        //get
+        $setors = $setors->get();
+
+        return response()->json($setors, 200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
+    }
+
 }

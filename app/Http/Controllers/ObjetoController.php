@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Log;
+use Illuminate\Support\Facades\DB;
 
 class ObjetoController extends Controller
 {
@@ -185,5 +186,30 @@ class ObjetoController extends Controller
         return Pdf::loadView('objetos.report', [
             'dataset' => Objeto::orderBy('sigma', 'asc')->get()
         ])->download('Objetos_' . date("Y-m-d H:i:s") . '.pdf');
+    }
+
+        /**
+     * Função de autocompletar para ser usada pelo typehead
+     *
+     * @param
+     * @return json
+     */
+    public function autocomplete(Request $request) : \Illuminate\Http\JsonResponse
+    {
+        $this->authorize('objeto-index'); // verifica se o usuário possui acesso para listar
+
+        $objetos = DB::table('objetos');
+
+        // select
+        $objetos = $objetos->select('descricao as text', 'id as value', 'sigma as sigma');
+
+        //where
+        $objetos = $objetos->where("descricao","LIKE","%{$request->input('query')}%");
+        $objetos = $objetos->orWhere("sigma","LIKE","%{$request->input('query')}%");
+
+        //get
+        $objetos = $objetos->get();
+
+        return response()->json($objetos, 200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
     }
 }
