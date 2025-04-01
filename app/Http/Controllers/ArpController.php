@@ -102,7 +102,7 @@ class ArpController extends Controller
 
         return view('arps.edit', [
             'arp' => $arp,
-            'items' => Item::where('arp_id', $arp->id)->orderBy('id', 'asc')->get()
+            'items' => Item::where('arp_id', $arp->id)->get()
         ]);
     }
 

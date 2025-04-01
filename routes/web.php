@@ -94,8 +94,11 @@ Route::resource('/arps', ArpController::class)->middleware('auth');
 
 # Item::class
 
-Route::resource('/items', ItemController::class)->middleware('auth')->only('store');
+Route::post('/items/create', [ItemController::class, 'store'])->name('items.store')->middleware('auth');
+Route::post('/items/remove', [ItemController::class, 'destroy'])->name('items.destroy')->middleware('auth');
 
 # Cota::class
 
-Route::resource('/cotas', CotaController::class)->middleware('auth')->only('store', 'destroy');
+Route::post('/cotas/create', [CotaController::class, 'store'])->name('cotas.store')->middleware('auth');
+Route::post('/cotas/remove', [CotaController::class, 'destroy'])->name('cotas.destroy')->middleware('auth');
+Route::post('/cotas/edit', [CotaController::class, 'update'])->name('cotas.update')->middleware('auth');

@@ -31,13 +31,16 @@ class CotaController extends Controller
     {
         $this->authorize('cota-create');
 
-        $cota = $request->validate([
+        //dd($request->all());
+
+        $input = $request->validate([
             'item_id' => 'required|int|exists:items,id',
             'setor_id' => 'required|int|exists:setors,id',
+            'arp_id_criar' => 'required|int|exists:arps,id',
             'quantidade' => 'required|int|min:1',
         ]);
 
-        $new_cota = Cota::create($cota);
+        $new_cota = Cota::create($input);
 
         // LOG
         Log::create([
@@ -48,7 +51,7 @@ class CotaController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect(route('arps.edit', $new_cota->item->arp_id))->with('message','Cota adicionada ao setor com sucesso!');
+        return redirect(route('arps.edit', $input['arp_id_criar']))->with('message','Cota adicionada ao setor com sucesso!');
     }
 
     /**
@@ -70,15 +73,38 @@ class CotaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Cota $cota)
+    public function update(Request $request)
     {
-        //
+        $this->authorize('cota-edit');
+
+        $input = $request->validate([
+            'arp_id_editar' => 'required|int|exists:arps,id',
+            'cota_id_editar' => 'required|int|exists:cotas,id',
+            'quantidade_editar' => 'required|int|min:1',
+        ]);
+
+        $cota = Cota::find($input['cota_id_editar']);
+        $cota->quantidade = $request->quantidade_editar;
+        $cota->save();
+
+        // LOG
+        Log::create([
+            'model_id' => $cota->id,
+            'model' => 'Cota',
+            'action' => 'update',
+            'changes' => json_encode($cota),
+            'user_id' => auth()->id(),
+        ]);
+
+
+
+        return redirect(route('arps.edit', $input['arp_id_editar']))->with('message','Cota atualizada com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Cota $cota)
+    public function destroy(Request $request)
     {
         $this->authorize('cota-delete');
 

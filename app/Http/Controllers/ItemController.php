@@ -77,8 +77,38 @@ class ItemController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Item $item)
+    public function destroy(Request $request)
     {
-        //
+        $this->authorize('item-delete');
+
+        $input = $request->validate([
+            'item_id_item_delete' => 'required|int|exists:items,id',
+        ]);
+
+        $item = Item::find($input['item_id_item_delete']);
+
+        $arp_item = $item->arp_id;
+
+        // LOG
+        Log::create([
+            'model_id' => $item->id,
+            'model' => 'Item',
+            'action' => 'destroy',
+            'changes' => json_encode($item),
+            'user_id' => auth()->id(),
+        ]);
+
+        if ($item) {
+            try {
+                $item->delete();
+            } catch (\Exception $e) {
+                return redirect(route('arps.edit', $arp_item))->with('message','Failed to delete item: ' . $e->getMessage());
+            }
+        } else {
+            return redirect(route('arps.edit', $arp_item))->with('message','Item not found.');
+        }
+
+        return redirect(route('arps.edit', $arp_item))->with('message','Objeto removido com sucesso!');
+
     }
 }

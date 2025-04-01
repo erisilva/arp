@@ -158,7 +158,7 @@
     <div class="container py-2">
 
         @if (count($items) > 0)
-            @foreach($items as $item)
+            @foreach($items->sortBy(fn($item) => $item->objeto->descricao) as $item)
 
                 <div class="container py-2 text-center">
 
@@ -167,7 +167,7 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
                                 <h5 class="text-start"><strong>Objeto: </strong> {{ $item->objeto->descricao }}</h5>
-                                <h5 class="text-end"><strong>Sigma: </strong> {{ $item->objeto->sigma }}</h5>
+                                <h5 class="text-end"><strong>Sigma: </strong> {{ $item->id }}</h5>
                             </div>
                         </div>
                         <div class="card-body">
@@ -178,7 +178,7 @@
                                 <div class="container py-3">
                                     <div class="row g-3">
 
-                                        @foreach ($item->cotas as $cota)
+                                        @foreach ($item->cotas->sortBy(fn($cota) => $cota->setor->descricao) as $cota)
 
                                             <div class="col-md-3">
                                                 <div class="card">
@@ -193,9 +193,16 @@
                                                             <div class="container">
                                                                 <div class="float-sm-end">
 
-                                                                    <a href="#" class="btn btn-primary btn-sm" role="button">
-                                                                        <x-icon icon='pencil-square' />
-                                                                    </a>
+                                                                    @can('cota-edit')
+
+                                                                        <a href="#" class="btn btn-primary btn-sm" role="button"
+                                                                            data-bs-toggle="modal" data-bs-target="#modalEditarCota"
+                                                                            data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}
+                                                                            data-quantidade={{ $cota->quantidade }}>
+                                                                            <x-icon icon='pencil-square' />
+                                                                        </a>
+
+                                                                    @endcan
 
                                                                     @can('cota-delete')
 
@@ -227,11 +234,31 @@
 
                             @can('cota-create')
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovaCota"
-                                    data-item-id={{ $item->id }}>
-                                    <i class="bi bi-plus-circle"></i> Incluir Cota
+                                    data-item-id={{ $item->id }} data-arp-id="{{ $item->arp_id }}">
+                                    <x-icon icon='plus-circle' /> Incluir Cota
                                 </button>
                             @endcan
 
+                        </div>
+
+                        {{--  Rodapé --}}
+                        <div class="card-footer">
+                            <div class="container">
+                                <div class="float-sm-end">
+                                    @can('objeto-delete')
+
+                                        <a href="#" class="btn btn-danger btn-sm" role="button"
+                                            data-bs-toggle="modal" data-bs-target="#modalExcluirItem"
+                                            data-item-id={{ $item->id }} />
+                                            <x-icon icon='trash' />
+                                        </a>
+
+                                    @endcan
+                                </div>
+                                <div class="float-sm-start">
+                                    Quantidade: {{ $item->cotas->sum('quantidade') }}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -273,7 +300,7 @@
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5"><i class="bi bi-plus-circle"></i> Incluir Novo Objeto</h1>
+                        <h1 class="modal-title fs-5"><x-icon icon='plus-circle' /> Incluir Novo Objeto</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -293,7 +320,7 @@
                                 </div>
                                 <input type="hidden" id="objeto_id" name="objeto_id" value="">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i>
+                                    <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='plus-circle' />
                                         Incluir Objeto
                                     </button>
                                 </div>
@@ -301,8 +328,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                                class="fas fa-window-close"></i>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <x-icon icon='x' />
                             Fechar</button>
                     </div>
                 </div>
@@ -316,13 +343,15 @@
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5"><i class="bi bi-plus-circle"></i> Incluir Nova Cota</h1>
+                        <h1 class="modal-title fs-5"><x-icon icon='plus-circle' /> Incluir Nova Cota</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form method="POST" action="{{ route('cotas.store') }}">
                             @csrf
                             <input type="hidden" name="item_id" id="item_id" value="">
+                            <input type="hidden" id="setor_id" name="setor_id" value="">
+                            <input type="hidden" name="arp_id_criar" id="arp_id_criar" value="">
                             <div class="row g-3">
                                 <div class="col-8">
                                     <label for="setor" class="form-label">Setor</label>
@@ -334,9 +363,8 @@
                                     <input type="number" class="form-control" name="quantidade" id="quantidade" value=""
                                         autocomplete="off" required>
                                 </div>
-                                <input type="hidden" id="setor_id" name="setor_id" value="">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i>
+                                    <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='plus-circle' />
                                         Incluir Cota
                                     </button>
                                 </div>
@@ -344,8 +372,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                                class="fas fa-window-close"></i>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <x-icon icon='x' />
                             Fechar</button>
                     </div>
                 </div>
@@ -363,14 +391,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="{{ route('cotas.destroy', 1) }}">
+                        <form method="POST" action="{{ route('cotas.destroy') }}">
                             @csrf
-                            @method('DELETE')
                             <input type="hidden" name="arp_id" id="arp_id" value="">
                             <input type="hidden" name="cota_id" id="cota_id" value="">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-danger btn-lg"><x-icon icon='plus-circle' />
+                                    <button type="submit" class="btn btn-danger btn-lg"><x-icon icon='exclamation-diamond' />
                                         Confirmar
                                     </button>
                                 </div>
@@ -378,8 +405,76 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                                class="fas fa-window-close"></i>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
+                            Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+    @can('cota-edit')
+        <!-- Janela para editas as quantidades da cota -->
+        <div class="modal fade" id="modalEditarCota" tabindex="-1" aria-labelledby="Editar cota" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"><x-icon icon='pencil-square' /> Editar Cota</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('cotas.update') }}">
+                            @csrf
+                            <input type="hidden" name="arp_id_editar" id="arp_id_editar" value="">
+                            <input type="hidden" id="cota_id_editar" name="cota_id_editar" value="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="quantidade_editar" class="form-label">Quantidade</label>
+                                    <input type="number" class="form-control" name="quantidade_editar" id="quantidade_editar" value=""
+                                        autocomplete="off" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='pencil-square' />
+                                        Editar Cota
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
+                            Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+
+    @can('item-delete')
+        <!-- Janela para excluir cota -->
+        <div class="modal fade" id="modalExcluirItem" tabindex="-1" aria-labelledby="Excluir objeto do arp" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"><x-icon icon='trash' /> Excluir objeto desse ARP e suas respectivas cotas/setor?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('items.destroy') }}">
+                            @csrf
+                            <input type="hidden" name="item_id_item_delete" id="item_id_item_delete" value="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-danger btn-lg"><x-icon icon='exclamation-diamond' />
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
                             Fechar</button>
                     </div>
                 </div>
@@ -412,6 +507,26 @@
             language: "pt-BR",
             autoclose: true,
             todayHighlight: true
+        });
+
+        $('#modalNovaCota').on('show.bs.modal', function (e) {
+            $('#item_id').val($(e.relatedTarget).data('item-id'));
+            $('#arp_id_criar').val($(e.relatedTarget).data('arp-id'));
+        });
+
+        $('#modalExcluirCota').on('show.bs.modal', function (e) {
+            $('#arp_id').val($(e.relatedTarget).data('arp-id'));
+            $('#cota_id').val($(e.relatedTarget).data('cota-id'));
+        });
+
+        $('#modalExcluirItem').on('show.bs.modal', function (e) {
+            $('#item_id_item_delete').val($(e.relatedTarget).data('item-id'));
+        });
+
+        $('#modalEditarCota').on('show.bs.modal', function (e) {
+            $('#arp_id_editar').val($(e.relatedTarget).data('arp-id'));
+            $('#cota_id_editar').val($(e.relatedTarget).data('cota-id'));
+            $('#quantidade_editar').val($(e.relatedTarget).data('quantidade'));
         });
 
         var objetos = new Bloodhound({
@@ -457,16 +572,6 @@
                 $('#objeto_id').val(datum.value);
                 $('#sigma').val(datum.sigma);
             });
-
-        $('#modalNovaCota').on('show.bs.modal', function (e) {
-            $('#item_id').val($(e.relatedTarget).data('item-id'));
-        });
-
-        $('#modalExcluirCota').on('show.bs.modal', function (e) {
-            $('#arp_id').val($(e.relatedTarget).data('arp-id'));
-            $('#cota_id').val($(e.relatedTarget).data('cota-id'));
-        });
-
 
         var setors = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace("text"),
