@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->decimal('valor', 10, 2);
             $table->foreignId('arp_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->foreignId('objeto_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamps();

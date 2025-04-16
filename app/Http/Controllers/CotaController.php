@@ -38,6 +38,7 @@ class CotaController extends Controller
             'setor_id' => 'required|int|exists:setors,id',
             'arp_id_criar' => 'required|int|exists:arps,id',
             'quantidade' => 'required|int|min:1',
+            'empenho' => 'required|int|min:0',
         ]);
 
         $new_cota = Cota::create($input);

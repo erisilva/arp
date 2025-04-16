@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
-    protected $fillable = ['arp_id', 'objeto_id'];
+    protected $fillable = ['arp_id', 'objeto_id', 'valor'];
 
     public function arp() : BelongsTo
     {

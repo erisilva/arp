@@ -9,6 +9,7 @@ class Cota extends Model
 {
     protected $fillable = [
         'quantidade',
+        'empenho',
         'setor_id',
         'item_id',
     ];

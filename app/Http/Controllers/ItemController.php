@@ -34,7 +34,11 @@ class ItemController extends Controller
         $item = $request->validate([
             'arp_id' => 'required|int|exists:arps,id',
             'objeto_id' => 'required|int|exists:objetos,id',
+            'valor' => 'required',
         ]);
+
+        # convert the valor to format decimal
+        $item['valor'] = str_replace(',', '.', str_replace('.', '', $item['valor']));
 
         $new_item = Item::create($item);
 

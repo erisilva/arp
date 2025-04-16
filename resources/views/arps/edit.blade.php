@@ -166,8 +166,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
-                                <h5 class="text-start"><strong>Objeto: </strong> {{ $item->objeto->descricao }}</h5>
-                                <h5 class="text-end"><strong>Sigma: </strong> {{ $item->id }}</h5>
+                                <h5 class="text-start"><strong>Objeto: </strong> {{ $item->objeto->descricao }} - <strong>Sigma:
+                                    </strong> <span class="text-primary">{{ $item->objeto->sigma }}</span></h5>
+                                <h5 class="text-end"><strong>Valor: R$ </strong> {{ number_format($item->valor, 2, ',', '.') }}</h5>
                             </div>
                         </div>
                         <div class="card-body">
@@ -181,45 +182,64 @@
                                         @foreach ($item->cotas->sortBy(fn($cota) => $cota->setor->descricao) as $cota)
 
                                             <div class="col-md-3">
+
                                                 <div class="card">
-                                                    <ul class="list-group list-group-flush">
-                                                        <li class="list-group-item">
-                                                            {{ $cota->setor->descricao }}
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            {{ $cota->quantidade }}
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <div class="container">
-                                                                <div class="float-sm-end">
+                                                    <div class="card-header">
+                                                        {{ $cota->setor->descricao }}
+                                                    </div>
 
-                                                                    @can('cota-edit')
+                                                    <div class="card-body">
+                                                        <table class="table">
+                                                            <thead>
+                                                              <tr>
+                                                                <th scope="col">Quantidade</th>
+                                                                <th scope="col">Empenho</th>
+                                                                <th scope="col">Saldo</th>
+                                                              </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                              <tr>
+                                                                <td>{{ $cota->quantidade }}</td>
+                                                                <td>{{ $cota->empenho }}</td>
+                                                                <td>{{ $cota->quantidade - $cota->empenho }}</td>
+                                                              </tr>
+                                                            </tbody>
+                                                          </table>
+                                                    </div>
 
-                                                                        <a href="#" class="btn btn-primary btn-sm" role="button"
-                                                                            data-bs-toggle="modal" data-bs-target="#modalEditarCota"
-                                                                            data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}
-                                                                            data-quantidade={{ $cota->quantidade }}>
-                                                                            <x-icon icon='pencil-square' />
-                                                                        </a>
+                                                    <div class="card-footer">
+                                                        <div class="container">
+                                                            <div class="float-sm-end">
 
-                                                                    @endcan
+                                                                @can('cota-edit')
 
-                                                                    @can('cota-delete')
+                                                                    <a href="#" class="btn btn-primary btn-sm" role="button"
+                                                                        data-bs-toggle="modal" data-bs-target="#modalEditarCota"
+                                                                        data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}
+                                                                        data-quantidade={{ $cota->quantidade }}>
+                                                                        <x-icon icon='pencil-square' />
+                                                                    </a>
 
-                                                                        <a href="#" class="btn btn-danger btn-sm" role="button"
-                                                                            data-bs-toggle="modal" data-bs-target="#modalExcluirCota"
-                                                                            data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}>
-                                                                            <x-icon icon='trash' />
-                                                                        </a>
+                                                                @endcan
 
-                                                                    @endcan
+                                                                @can('cota-delete')
 
-                                                                </div>
+                                                                    <a href="#" class="btn btn-danger btn-sm" role="button"
+                                                                        data-bs-toggle="modal" data-bs-target="#modalExcluirCota"
+                                                                        data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}>
+                                                                        <x-icon icon='trash' />
+                                                                    </a>
+
+                                                                @endcan
+
                                                             </div>
+                                                        </div>
+                                                    </div>
 
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                  </div>
+
+
+
                                             </div>
 
                                         @endforeach
@@ -241,16 +261,15 @@
 
                         </div>
 
-                        {{--  Rodapé --}}
+                        {{-- Rodapé --}}
                         <div class="card-footer">
                             <div class="container">
                                 <div class="float-sm-end">
                                     @can('objeto-delete')
 
-                                        <a href="#" class="btn btn-danger btn-sm" role="button"
-                                            data-bs-toggle="modal" data-bs-target="#modalExcluirItem"
-                                            data-item-id={{ $item->id }} />
-                                            <x-icon icon='trash' />
+                                        <a href="#" class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal"
+                                            data-bs-target="#modalExcluirItem" data-item-id={{ $item->id }} />
+                                        <x-icon icon='trash' />
                                         </a>
 
                                     @endcan
@@ -297,7 +316,7 @@
     @can('item-create')
         <!-- Janela para incluir novo objeto -->
         <div class="modal fade" id="modalNovoObjeto" tabindex="-1" aria-labelledby="Incluir novo objeto" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5"><x-icon icon='plus-circle' /> Incluir Novo Objeto</h1>
@@ -308,15 +327,20 @@
                             @csrf
                             <input type="hidden" name="arp_id" value="{{ $arp->id }}">
                             <div class="row g-3">
-                                <div class="col-8">
+                                <div class="col-6">
                                     <label for="objeto" class="form-label">Objeto</label>
                                     <input type="text" class="form-control" name="objeto" id="objeto"
                                         value="{{ old('objeto') ?? '' }}" autocomplete="off" required>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <label for="sigma" class="form-label">Sigma</label>
                                     <input type="text" class="form-control" name="sigma" id="sigma" value="" autocomplete="off"
                                         required readonly tabindex="-1">
+                                </div>
+                                <div class="col-3">
+                                    <label for="valor" class="form-label">Valor</label>
+                                    <input type="text" class="form-control" name="valor" id="valor" value="" autocomplete="off"
+                                        required>
                                 </div>
                                 <input type="hidden" id="objeto_id" name="objeto_id" value="">
                                 <div class="col-12">
@@ -340,7 +364,7 @@
     @can('cota-create')
         <!-- Janela para incluir nova cota -->
         <div class="modal fade" id="modalNovaCota" tabindex="-1" aria-labelledby="Incluir nova cota" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5"><x-icon icon='plus-circle' /> Incluir Nova Cota</h1>
@@ -358,11 +382,19 @@
                                     <input type="text" class="form-control" name="setor" id="setor"
                                         value="{{ old('setor') ?? '' }}" autocomplete="off" required>
                                 </div>
-                                <div class="col-4">
+
+                                <div class="col-2">
                                     <label for="quantidade" class="form-label">Quantidade</label>
                                     <input type="number" class="form-control" name="quantidade" id="quantidade" value=""
                                         autocomplete="off" required>
                                 </div>
+
+                                <div class="col-2">
+                                    <label for="empenho" class="form-label">Empenho</label>
+                                    <input type="number" class="form-control" name="empenho" id="empenho" value="{{ old('empenho', 0) }}"
+                                        autocomplete="off" required>
+                                </div>
+
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='plus-circle' />
                                         Incluir Cota
@@ -430,8 +462,13 @@
                             <div class="row g-3">
                                 <div class="col-12">
                                     <label for="quantidade_editar" class="form-label">Quantidade</label>
-                                    <input type="number" class="form-control" name="quantidade_editar" id="quantidade_editar" value=""
-                                        autocomplete="off" required>
+                                    <input type="number" class="form-control" name="quantidade_editar" id="quantidade_editar"
+                                        value="" autocomplete="off" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="empenho_editar" class="form-label">Empenho</label>
+                                    <input type="number" class="form-control" name="empenho_editar" id="empenho_editar"
+                                        value="" autocomplete="off" required>
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='pencil-square' />
@@ -457,7 +494,8 @@
             <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5"><x-icon icon='trash' /> Excluir objeto desse ARP e suas respectivas cotas/setor?</h1>
+                        <h1 class="modal-title fs-5"><x-icon icon='trash' /> Excluir objeto desse ARP e suas respectivas
+                            cotas/setor?</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -486,6 +524,7 @@
 @endsection
 @section('script-footer')
     <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.inputmask.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('js/typeahead.bundle.min.js') }}"></script>
     <script src="{{ asset('locales/bootstrap-datepicker.pt-BR.min.js') }}"></script>
@@ -507,6 +546,17 @@
             language: "pt-BR",
             autoclose: true,
             todayHighlight: true
+        });
+
+        $("#valor").inputmask('decimal', {
+            'alias': 'numeric',
+            'groupSeparator': '.',
+            'autoGroup': true,
+            'digits': 2,
+            'radixPoint': ",",
+            'digitsOptional': false,
+            'allowMinus': false,
+            'placeholder': ''
         });
 
         $('#modalNovaCota').on('show.bs.modal', function (e) {
