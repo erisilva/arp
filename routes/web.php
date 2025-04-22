@@ -38,7 +38,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 # Permission::class
 
-Route::get('/permissions/export/csv', [PermissionController::class, 'exportcsv'])->name('permissions.export.csv')->middleware('auth'); // Export CSV
+Route::get('/permissions/export/csv', [PermissionController::class, 'exportcsv'])->name('permissions.export.csv')->middleware('auth');
+
+Route::get('/permissions/export/xls', [PermissionController::class, 'exportxls'])->name('permissions.export.xls')->middleware('auth'); // Export XLS
 
 Route::get('/permissions/export/pdf', [PermissionController::class, 'exportpdf'])->name('permissions.export.pdf')->middleware('auth'); // Export PDF
 
@@ -48,6 +50,8 @@ Route::resource('/permissions', PermissionController::class)->middleware('auth')
 
 Route::get('/roles/export/csv', [RoleController::class, 'exportcsv'])->name('roles.export.csv')->middleware('auth'); // Export CSV
 
+Route::get('/roles/export/xls', [RoleController::class, 'exportxls'])->name('roles.export.xls')->middleware('auth'); // Export XLS
+
 Route::get('/roles/export/pdf', [RoleController::class, 'exportpdf'])->name('roles.export.pdf')->middleware('auth'); // Export PDF
 
 Route::resource('/roles', RoleController::class)->middleware('auth');
@@ -55,6 +59,8 @@ Route::resource('/roles', RoleController::class)->middleware('auth');
 # User::class
 
 Route::get('/users/export/csv', [UserController::class, 'exportcsv'])->name('users.export.csv')->middleware('auth'); // Export CSV
+
+Route::get('/users/export/xls', [UserController::class, 'exportxls'])->name('users.export.xls')->middleware('auth'); // Export XLS
 
 Route::get('/users/export/pdf', [UserController::class, 'exportpdf'])->name('users.export.pdf')->middleware('auth'); // Export PDF
 
@@ -75,6 +81,8 @@ Route::get('/setors/autocomplete', [SetorController::class, 'autocomplete'])->na
 Route::resource('/setors', SetorController::class)->middleware('auth');
 
 # Objeto::class
+
+Route::get('/objetos/export/xls', [ObjetoController::class, 'exportxls'])->name('objetos.export.xls')->middleware('auth'); // Export CSV
 
 Route::get('/objetos/export/csv', [ObjetoController::class, 'exportcsv'])->name('objetos.export.csv')->middleware('auth'); // Export CSV
 

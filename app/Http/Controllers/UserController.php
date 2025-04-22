@@ -13,9 +13,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Gate;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersExport;
+
 
 
 
@@ -242,5 +245,15 @@ class UserController extends Controller
       return PDF::loadView('users.report', [
           'dataset' => User::orderBy('name', 'asc')->filter(request(['name', 'email']))->get()
       ])->download(__('Users') . '_' .  date("Y-m-d H:i:s") . '.pdf');
+    }
+
+    /**
+     * Export the specified resource to XLSX.
+     */
+    public function exportxls() : \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+      $this->authorize('user-export');
+
+      return Excel::download(new UsersExport(request(['name','email'])),  __('Users') . '_' .  date("Y-m-d H:i:s") . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }

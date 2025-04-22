@@ -6,7 +6,11 @@ use App\Models\Objeto;
 use App\Models\Perpage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf; // Export PDF
+
+use App\Exports\ObjetosExport;
+use Maatwebsite\Excel\Facades\Excel; // Export Excel
+
 use App\Models\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +28,11 @@ class ObjetoController extends Controller
         }
 
         return view('objetos.index', [
-            'objetos' => Objeto::orderBy('sigma', 'asc')->paginate(session('perPage', '5'))->withPath(env('APP_URL', null) . '/objetos'),
+            'objetos' => Objeto::orderBy('sigma', 'asc')
+                ->filter(request(['sigma', 'descricao']))
+                ->paginate(session('perPage', '5'))
+                ->appends(request(['sigma', 'descricao']))
+                ->withPath(env('APP_URL', null) . '/objetos'),
             'perpages' => Perpage::orderBy('valor')->get()
         ]);
     }
@@ -184,32 +192,34 @@ class ObjetoController extends Controller
         $this->authorize('objeto-export');
 
         return Pdf::loadView('objetos.report', [
-            'dataset' => Objeto::orderBy('sigma', 'asc')->get()
+            'dataset' => Objeto::orderBy('sigma', 'asc')->filter(['sigma', 'descricao'])->get()
         ])->download('Objetos_' . date("Y-m-d H:i:s") . '.pdf');
     }
 
-        /**
+     /**
      * Função de autocompletar para ser usada pelo typehead
-     *
-     * @param
-     * @return json
      */
     public function autocomplete(Request $request) : \Illuminate\Http\JsonResponse
     {
         $this->authorize('objeto-index'); // verifica se o usuário possui acesso para listar
 
-        $objetos = DB::table('objetos');
+        // Usando o modelo Objeto para realizar a consulta
+        $objetos = Objeto::query()
+            ->select(['descricao as text', 'id as value', 'sigma as sigma'])
+            ->where('descricao', 'LIKE', "%{$request->input('query')}%")
+            ->orWhere('sigma', 'LIKE', "%{$request->input('query')}%")
+            ->get();
 
-        // select
-        $objetos = $objetos->select('descricao as text', 'id as value', 'sigma as sigma');
+        return response()->json($objetos, 200, ['Content-type' => 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
+    }
 
-        //where
-        $objetos = $objetos->where("descricao","LIKE","%{$request->input('query')}%");
-        $objetos = $objetos->orWhere("sigma","LIKE","%{$request->input('query')}%");
+    /**
+     * Export the specified resource to Excel.
+     */
+    public function exportxls() : \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $this->authorize('objeto-export');
 
-        //get
-        $objetos = $objetos->get();
-
-        return response()->json($objetos, 200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
+        return Excel::download(new ObjetosExport(request(['sigma', 'descricao'])),  'Objetos_' .  date("Y-m-d H:i:s") . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }

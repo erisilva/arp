@@ -32,6 +32,12 @@
 
                     <li>
                         <a class="dropdown-item"
+                            href="{{route('permissions.export.xls', ['description' => request()->input('description'), 'name' => request()->input('name')])}}"><x-icon
+                                icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' XLS' }}</a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
                             href="{{route('permissions.export.csv', ['description' => request()->input('description'), 'name' => request()->input('name')])}}"><x-icon
                                 icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' CSV' }}</a>
                     </li>

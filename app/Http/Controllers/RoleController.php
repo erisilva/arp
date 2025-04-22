@@ -8,9 +8,12 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Gate;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+
+use App\Exports\RolesExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 use App\Models\Role;
 use App\Models\Perpage;
@@ -237,6 +240,9 @@ class RoleController extends Controller
         return Response::stream($callback, 200, $headers);
     }
 
+    /**
+     * Export the specified resource to PDF.
+     */
     public function exportpdf() : \Illuminate\Http\Response
     {
         $this->authorize('role-export');
@@ -245,4 +251,15 @@ class RoleController extends Controller
             'dataset' => Role::orderBy('id', 'asc')->filter(request(['name', 'description']))->get()
         ])->download(__('Roles') . '_' .  date("Y-m-d H:i:s") . '.pdf');
     }
+
+        /**
+     * Export the specified resource to XLS.
+     */
+    public function exportxls(): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $this->authorize('role-export');
+        return Excel::download(new RolesExport(request(['name', 'description'])), __('Roles') . '_' . date("Y-m-d H:i:s") . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+
 }

@@ -30,6 +30,11 @@
                 <x-dropdown-menu title='Reports' icon='printer'>
 
                     <li>
+                        <a class="dropdown-item" href="{{route('objetos.export.xls')}}"><x-icon
+                                icon='file-earmark-excel-fill' /> {{ __('Export') . ' XLS' }}</a>
+                    </li>
+
+                    <li>
                         <a class="dropdown-item" href="{{route('objetos.export.csv')}}"><x-icon
                                 icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' CSV' }}</a>
                     </li>
@@ -87,7 +92,30 @@
 
     </div>
 
-    <x-modal-filter class="modal-lg" :perpages="$perpages" icon='funnel' title='Filters'></x-modal-filter>
+    <x-modal-filter class="modal-sm" :perpages="$perpages" icon='funnel' title='Filters'>
+
+        <form method="GET" action="{{ route('objetos.index') }}">
+
+            <div class="mb-3">
+                <label for="sigma" class="form-label">SIGMA</label>
+                <input type="text" class="form-control" id="sigma" name="sigma"
+                    value="{{ session()->get('objeto_sigma') }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <input type="text" class="form-control" id="descricao" name="descricao"
+                    value="{{ session()->get('objeto_descricao') }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='search' /> {{ __('Search') }}</button>
+
+            <a href="{{ route('objetos.index', ['sigma' => '', 'descricao' => '']) }}" class="btn btn-secondary btn-sm"
+                role="button"><x-icon icon='stars' /> {{ __('Reset') }}</a>
+
+        </form>
+
+    </x-modal-filter>
 
 @endsection
 @section('script-footer')

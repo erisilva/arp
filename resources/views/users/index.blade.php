@@ -29,6 +29,13 @@
 
                     <li>
                         <a class="dropdown-item"
+                            href="{{ route('users.export.xls', ['email' => request()->input('email'), 'name' => request()->input('name')]) }}"><x-icon
+                                icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' XLS' }}</a>
+
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
                             href="{{ route('users.export.csv', ['email' => request()->input('email'), 'name' => request()->input('name')]) }}"><x-icon
                                 icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' CSV' }}</a>
                     </li>
@@ -45,17 +52,20 @@
 
 
             <x-dropdown-menu title='Options' icon='gear'>
+
                 @can('role-index')
                     <li>
                         <a class="dropdown-item" href="{{ route('roles.index') }}"><x-icon icon='table' /> {{ __('Roles') }}</a>
                     </li>
                 @endcan
+
                 @can('permission-index')
                     <li>
                         <a class="dropdown-item" href="{{ route('permissions.index') }}"><x-icon icon='table' />
                             {{ __('Permissions')}}</a>
                     </li>
                 @endcan
+
             </x-dropdown-menu>
 
         </x-btn-group>

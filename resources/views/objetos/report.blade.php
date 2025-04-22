@@ -54,7 +54,7 @@
 </head>
     <body>
         <header>
-            Setores
+            Objetos
         </header>
 
         <footer>
@@ -64,13 +64,13 @@
         <main>
             <table  class="bordered" width="100%">
               <thead>
-                <th style="text-align:left;">Sigla</th>
+                <th style="text-align:left;">SIGMA</th>
                 <th style="text-align:left;">Descrição</th>
               </thead>
               <tbody>
                 @foreach($dataset as $row)
                 <tr>
-                  <td>{{$row->sigla}}</td>
+                  <td>{{$row->sigma}}</td>
                   <td>{{$row->descricao}}</td>
                 </tr>
                 @endforeach

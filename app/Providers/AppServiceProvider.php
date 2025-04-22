@@ -9,6 +9,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
 
 
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::automaticallyEagerLoadRelationships( );
 
         //URL::forceScheme('https'); // linux
 

@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Gate;
-use Barryvdh\DomPDF\Facade\Pdf;
+
+use Barryvdh\DomPDF\Facade\Pdf; // Export PDF
+
+use App\Exports\PermissionsExport;
+use Maatwebsite\Excel\Facades\Excel; // Export Excel
+
 
 use Illuminate\View\View;
 
@@ -197,5 +201,15 @@ class PermissionController extends Controller
         return Pdf::loadView('permissions.report', [
             'dataset' => Permission::orderBy('id', 'asc')->filter(request(['name', 'description']))->get()
         ])->download(__('Permissions') . '_' . date("Y-m-d H:i:s") . '.pdf');
+    }
+
+    /**
+     * Export the specified resource to Excel.
+     */
+    public function exportxls() : \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $this->authorize('permission-export');
+
+        return Excel::download(new PermissionsExport(request(['name', 'description'])),  __('Permissions') . '_' .  date("Y-m-d H:i:s") . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }

@@ -39,8 +39,18 @@ class SetorSeeder extends Seeder
         ]);
 
         DB::table('setors')->insert([
-            'sigla' => 'SURGH',
+            'sigla' => 'CIRUR',
             'descricao' => 'Cirurgia',
+        ]);
+
+        DB::table('setors')->insert([
+            'sigla' => 'RH',
+            'descricao' => 'Recursos Humanos',
+        ]);
+
+        DB::table('setors')->insert([
+            'sigla' => 'DIR',
+            'descricao' => 'Diretoria',
         ]);
 
     }
