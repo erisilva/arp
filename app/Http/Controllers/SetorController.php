@@ -7,7 +7,10 @@ use App\Models\Perpage;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf; // Export PDF
+
+use App\Exports\SetorsExport;
+use Maatwebsite\Excel\Facades\Excel; // Export Excel
 use App\Models\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -213,5 +216,13 @@ class SetorController extends Controller
 
         return response()->json($setors, 200, ['Content-type'=> 'application/json; charset=utf-8'], JSON_UNESCAPED_UNICODE);
     }
+    /**
+     * Export the specified resource to Excel.
+     */
+    public function exportxls() : \Symfony\Component\HttpFoundation\BinaryFileResponse
+    {
+        $this->authorize('setor-export');
 
+        return Excel::download(new SetorsExport(request(['sigla', 'descricao'])),  'Setores_' .  date("Y-m-d H:i:s") . '.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
 }

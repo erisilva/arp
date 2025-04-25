@@ -30,12 +30,17 @@
                 <x-dropdown-menu title='Reports' icon='printer'>
 
                     <li>
-                        <a class="dropdown-item" href="{{route('setors.export.csv')}}"><x-icon
+                        <a class="dropdown-item" href="{{route('setors.export.xls', ['descricao' => request()->input('descricao'), 'sigla' => request()->input('sigla')])}}"><x-icon
+                                icon='file-earmark-excel-fill' /> {{ __('Export') . ' XLS' }}</a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="{{route('setors.export.csv', ['descricao' => request()->input('descricao'), 'sigla' => request()->input('sigla')])}}"><x-icon
                                 icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' CSV' }}</a>
                     </li>
 
                     <li>
-                        <a class="dropdown-item" href="{{route('setors.export.pdf')}}"><x-icon icon='file-pdf-fill' />
+                        <a class="dropdown-item" href="{{route('setors.export.pdf', ['descricao' => request()->input('descricao'), 'sigla' => request()->input('sigla')])}}"><x-icon icon='file-pdf-fill' />
                             {{ __('Export') . ' PDF' }}</a>
                     </li>
 

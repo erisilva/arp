@@ -72,6 +72,8 @@ Route::resource('/logs', LogController::class)->middleware('auth')->only('show',
 
 # Setor::class
 
+Route::get('/setors/export/xls', [SetorController::class, 'exportxls'])->name('setors.export.xls')->middleware('auth'); // Export CSV
+
 Route::get('/setors/export/csv', [SetorController::class, 'exportcsv'])->name('setors.export.csv')->middleware('auth'); // Export CSV
 
 Route::get('/setors/export/pdf', [SetorController::class, 'exportpdf'])->name('setors.export.pdf')->middleware('auth'); // Export PDF

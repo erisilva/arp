@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Arp;
+use App\Models\ArpView;
 use App\Models\Item;
+use App\Models\Objeto;
 use App\Models\Perpage;
 use App\Models\Log;
 
@@ -20,17 +22,18 @@ class ArpController extends Controller
     {
         $this->authorize('arp-index');
 
+        //dd(session()->all());
+
         if (request()->has('perpage')) {
             session(['perPage' => request('perpage')]);
         }
 
         return view('arps.index', [
-            'arps' => Arp::orderBy('arp', 'asc')
-                ->orderBy('pac', 'asc')
-                ->orderBy('pe', 'asc')
-                ->filter(request(['arp', 'pac', 'pe', 'vigenciaInicio', 'vigenciaFim']))
+            'arps' => ArpView::orderBy('arp', 'asc')
+                ->orderBy('objeto', 'asc')
+                ->filter(request(['arp', 'pac', 'pe', 'vigencia_inicio', 'vigencia_fim', 'vigencia', 'sigma', 'objeto']))
                 ->paginate(session('perPage', '5'))
-                ->appends(request(['arp', 'pac', 'pe', 'vigenciaInicio', 'vigenciaFim']))
+                ->appends(request(['arp', 'pac', 'pe', 'vigencia_inicio', 'vigencia_fim', 'vigencia', 'sigma', 'objeto']))
                 ->withPath(env('APP_URL', null) . '/arps'),
             'perpages' => Perpage::orderBy('valor')->get()
         ]);
@@ -59,6 +62,9 @@ class ArpController extends Controller
             'pe' => 'required|max:10',
             'vigenciaInicio' => 'required|date_format:d/m/Y',
             'vigenciaFim' => 'required|date_format:d/m/Y',
+            'sigma' => 'required|max:10',
+            'objeto' => 'required|max:150',
+            'valor' => 'required',
         ]);
 
         $arp['vigenciaInicio'] = date('Y-m-d', strtotime(str_replace('/', '-', $arp['vigenciaInicio'])));
@@ -66,8 +72,28 @@ class ArpController extends Controller
 
         $arp['notas'] = $request->notas;
 
-
         $new_arp = Arp::create($arp);
+
+        # verifica se o objeto já está cadastrado com o sigma
+        $objeto = Objeto::where('sigma', $arp['sigma'])->first();
+
+        if ($objeto) {
+            $objeto->update([
+                'descricao' => $arp['objeto'],
+            ]);
+        } else {
+            $objeto = Objeto::create([
+            'sigma' => $arp['sigma'],
+            'descricao' => $arp['objeto'],
+            ]);
+        }
+
+        # cria um item
+        Item::create([
+            'arp_id' => $new_arp->id,
+            'objeto_id' => $objeto->id,
+            'valor' => str_replace(',', '.', str_replace('.', '', $arp['valor']))
+        ]);
 
         // LOG
         Log::create([

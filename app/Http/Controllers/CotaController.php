@@ -82,10 +82,12 @@ class CotaController extends Controller
             'arp_id_editar' => 'required|int|exists:arps,id',
             'cota_id_editar' => 'required|int|exists:cotas,id',
             'quantidade_editar' => 'required|int|min:1',
+            'empenho_editar' => 'required|int|min:0',
         ]);
 
         $cota = Cota::find($input['cota_id_editar']);
         $cota->quantidade = $request->quantidade_editar;
+        $cota->empenho = $request->empenho_editar;
         $cota->save();
 
         // LOG

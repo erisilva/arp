@@ -187,7 +187,7 @@ class PermissionSeeder extends Seeder
         // Permissões para a classe Item
         DB::table('permissions')->insert([
             'name' => 'item-index',
-            'description' => 'Lista de itens',
+            'description' => 'Listagem dos objetos do arp',
         ]);
         DB::table('permissions')->insert([
             'name' => 'item-create',
@@ -195,19 +195,19 @@ class PermissionSeeder extends Seeder
         ]);
         DB::table('permissions')->insert([
             'name' => 'item-edit',
-            'description' => 'Alterar dados do item',
+            'description' => 'Alterar dados do objeto no arp',
         ]);
         DB::table('permissions')->insert([
             'name' => 'item-delete',
-            'description' => 'Excluir item',
+            'description' => 'Excluir objeto de um arp',
         ]);
         DB::table('permissions')->insert([
             'name' => 'item-show',
-            'description' => 'Mostrar dados do item',
+            'description' => 'Mostrar dados de um objeto de um arp',
         ]);
         DB::table('permissions')->insert([
             'name' => 'item-export',
-            'description' => 'Exportação de dados dos itens',
+            'description' => 'Exportação de dados dos objetos de um arp',
         ]);
 
         // Permissões para a classe Cota

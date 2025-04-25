@@ -176,80 +176,79 @@
                             <h5 class="card-title">Cotas</h5>
 
                             @if (count($item->cotas) > 0)
-                                <div class="container py-3">
-                                    <div class="row g-3">
+                            <div class="container py-3">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-start">Setor</th>
+                                                <th class="text-start"></th>
+                                                <th class="text-end">Quantidade</th>
+                                                <th class="text-end">Empenho</th>
+                                                <th class="text-end">Saldo</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($item->cotas->sortBy(fn($cota) => $cota->setor->descricao) as $cota)
+                                                <tr>
+                                                    <td class="text-start">
+                                                        <strong>{{$cota->setor->sigla}}</strong>
+                                                    </td>
+                                                    <td class="text-start">
+                                                        {{$cota->setor->descricao}}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{$cota->quantidade}}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{$cota->empenho}}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ $cota->quantidade - $cota->empenho }}
+                                                    </td>
+                                                    <td>
+                                                        <x-btn-group label='Opções'>
 
-                                        @foreach ($item->cotas->sortBy(fn($cota) => $cota->setor->descricao) as $cota)
+                                                            @can('cota-edit')
+                                                                <a href="#" class="btn btn-primary btn-sm" role="button"
+                                                                    data-bs-toggle="modal" data-bs-target="#modalEditarCota"
+                                                                    data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}
+                                                                    data-quantidade={{ $cota->quantidade }}
+                                                                    data-empenho={{ $cota->empenho }}>
+                                                                    <x-icon icon='pencil-square' />
+                                                                </a>
+                                                            @endcan
 
-                                            <div class="col-md-3">
+                                                            @can('cota-delete')
+                                                                <a href="#" class="btn btn-danger btn-sm" role="button"
+                                                                    data-bs-toggle="modal" data-bs-target="#modalExcluirCota"
+                                                                    data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}>
+                                                                    <x-icon icon='trash' />
+                                                                </a>
+                                                            @endcan
 
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        {{ $cota->setor->descricao }}
-                                                    </div>
+                                                        </x-btn-group>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" class="text-end"><strong>Total:</strong></td>
+                                                <td class="text-end"><strong>{{ $item->cotas->sum('quantidade') }}</strong></td>
+                                                <td class="text-end"><strong>{{ $item->cotas->sum('empenho') }}</strong></td>
+                                                <td class="text-end"><strong>{{ $item->cotas->sum('quantidade') - $item->cotas->sum('empenho') }}</strong></td>
+                                            </tr>
+                                        </tfoot>
 
-                                                    <div class="card-body">
-                                                        <table class="table">
-                                                            <thead>
-                                                              <tr>
-                                                                <th scope="col">Quantidade</th>
-                                                                <th scope="col">Empenho</th>
-                                                                <th scope="col">Saldo</th>
-                                                              </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                              <tr>
-                                                                <td>{{ $cota->quantidade }}</td>
-                                                                <td>{{ $cota->empenho }}</td>
-                                                                <td>{{ $cota->quantidade - $cota->empenho }}</td>
-                                                              </tr>
-                                                            </tbody>
-                                                          </table>
-                                                    </div>
-
-                                                    <div class="card-footer">
-                                                        <div class="container">
-                                                            <div class="float-sm-end">
-
-                                                                @can('cota-edit')
-
-                                                                    <a href="#" class="btn btn-primary btn-sm" role="button"
-                                                                        data-bs-toggle="modal" data-bs-target="#modalEditarCota"
-                                                                        data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}
-                                                                        data-quantidade={{ $cota->quantidade }}>
-                                                                        <x-icon icon='pencil-square' />
-                                                                    </a>
-
-                                                                @endcan
-
-                                                                @can('cota-delete')
-
-                                                                    <a href="#" class="btn btn-danger btn-sm" role="button"
-                                                                        data-bs-toggle="modal" data-bs-target="#modalExcluirCota"
-                                                                        data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}>
-                                                                        <x-icon icon='trash' />
-                                                                    </a>
-
-                                                                @endcan
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                  </div>
-
-
-
-                                            </div>
-
-                                        @endforeach
-
-                                    </div>
-
+                                    </table>
                                 </div>
-                            @else
-                                <p class="card-text">.:Nenhuma cota cadastrada:.</p>
-                            @endif
+                            </div>
+                        @else
+                            <p class="card-text">.:Nenhuma cota cadastrada:.</p>
+                        @endif
+
 
 
                             @can('cota-create')
@@ -262,23 +261,40 @@
                         </div>
 
                         {{-- Rodapé --}}
+
+                        @canany(['objeto-edit', 'objeto-delete'])
                         <div class="card-footer">
                             <div class="container">
                                 <div class="float-sm-end">
+
+                                    <x-btn-group label='Opções'>
+
+                                    @can('objeto-edit')
+
+                                        <a href="#" class="btn btn-primary btn-sm" role="button" data-bs-toggle="modal"
+                                            data-bs-target="#modalEditarItem" data-item-id={{ $item->id }}>
+                                        <x-icon icon='pencil-square' />
+                                        </a>
+
+                                    @endcan
+
+
                                     @can('objeto-delete')
 
                                         <a href="#" class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal"
-                                            data-bs-target="#modalExcluirItem" data-item-id={{ $item->id }} />
+                                            data-bs-target="#modalExcluirItem" data-item-id={{ $item->id }}>
                                         <x-icon icon='trash' />
                                         </a>
 
                                     @endcan
-                                </div>
-                                <div class="float-sm-start">
-                                    Quantidade: {{ $item->cotas->sum('quantidade') }}
+
+                                    </x-btn-group>
                                 </div>
                             </div>
                         </div>
+                        @endcanany
+
+
                     </div>
 
                 </div>
@@ -577,6 +593,7 @@
             $('#arp_id_editar').val($(e.relatedTarget).data('arp-id'));
             $('#cota_id_editar').val($(e.relatedTarget).data('cota-id'));
             $('#quantidade_editar').val($(e.relatedTarget).data('quantidade'));
+            $('#empenho_editar').val($(e.relatedTarget).data('empenho'));
         });
 
         var objetos = new Bloodhound({

@@ -58,7 +58,8 @@
                     <label for="vigenciaInicio" class="form-label">Vigência Inicial <strong
                             class="text-danger">(*)</strong></label>
                     <input type="text" class="form-control @error('vigenciaInicio') is-invalid @enderror"
-                        name="vigenciaInicio" id="vigenciaInicio" value="{{ old('vigenciaInicio') ?? '' }}">
+                        name="vigenciaInicio" id="vigenciaInicio" value="{{ old('vigenciaInicio') ?? '' }}"
+                        autocomplete="off">
                     @error('vigenciaInicio')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -68,7 +69,7 @@
                     <label for="vigenciaFim" class="form-label">Vigência Final <strong
                             class="text-danger">(*)</strong></label>
                     <input type="text" class="form-control @error('vigenciaFim') is-invalid @enderror" name="vigenciaFim"
-                        id="vigenciaFim" value="{{ old('vigenciaFim') ?? '' }}">
+                        id="vigenciaFim" value="{{ old('vigenciaFim') ?? '' }}" autocomplete="off">
                     @error('vigenciaFim')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -77,6 +78,34 @@
                 <div class="col-12">
                     <label for="notas">Anotações</label>
                     <textarea class="form-control" name="notas" rows="3">{{ old('notas') ?? '' }}</textarea>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sigma" class="form-label">SIGMA (Objeto) <strong class="text-danger">(*)</strong></label>
+                    <input type="text" class="form-control @error('sigma') is-invalid @enderror" name="sigma"
+                        value="{{ old('sigma') ?? '' }}">
+                    @error('sigma')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label for="objeto" class="form-label">Objeto (Descrição) <strong
+                            class="text-danger">(*)</strong></label>
+                    <input type="text" class="form-control @error('objeto') is-invalid @enderror" name="objeto"
+                        value="{{ old('objeto') ?? '' }}">
+                    @error('objeto')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-3">
+                    <label for="valor" class="form-label">Valor R$ (Objeto) <strong class="text-danger">(*)</strong></label>
+                    <input type="text" class="form-control @error('valor') is-invalid @enderror" name="valor"
+                        value="{{ old('valor') ?? '' }}" id="valor">
+                    @error('valor')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
 
@@ -107,6 +136,7 @@
 @endsection
 @section('script-footer')
     <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.inputmask.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('locales/bootstrap-datepicker.pt-BR.min.js') }}"></script>
     <script>
@@ -127,6 +157,17 @@
             language: "pt-BR",
             autoclose: true,
             todayHighlight: true
+        });
+
+        $("#valor").inputmask('decimal', {
+            'alias': 'numeric',
+            'groupSeparator': '.',
+            'autoGroup': true,
+            'digits': 2,
+            'radixPoint': ",",
+            'digitsOptional': false,
+            'allowMinus': false,
+            'placeholder': ''
         });
     </script>
 @endsection
