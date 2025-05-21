@@ -115,7 +115,8 @@ class ArpController extends Controller
         $this->authorize('arp-show');
 
         return view('arps.show', [
-            'arp' => $arp
+            'arp' => $arp,
+            'items' => Item::where('arp_id', $arp->id)->get()
         ]);
     }
 

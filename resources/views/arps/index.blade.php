@@ -55,8 +55,7 @@
                         <th>ARP</th>
                         <th>PAC</th>
                         <th>PE</th>
-                        <th>Vigência (Inicio)</th>
-                        <th>Vigência (Fim)</th>
+                        <th>Vigência</th>
                         <th></th>
                         <th>SIGMA</th>
                         <th>Objeto</th>
@@ -80,11 +79,9 @@
                                 {{ $arp->pe }}
                             </td>
                             <td>
-                                {{ $arp->vigenciaInicio->format('d/m/Y') }}
+                                {{ $arp->vigenciaInicio->format('d/m/Y') . ' a ' . $arp->vigenciaFim->format('d/m/Y') }}
                             </td>
-                            <td>
-                                {{ $arp->vigenciaFim->format('d/m/Y') }}
-                            </td>
+
 
                             <td class="text-center">
                                 @if ($arp->vigente == 1)

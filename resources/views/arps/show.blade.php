@@ -65,6 +65,104 @@
         </form>
     </div>
 
+    <div class="container py-3">
+
+        <div class="container bg-warning text-dark">
+            <p class="text-center"><strong>Objetos</strong></p>
+        </div>
+
+    </div>
+
+
+
+    <div class="container py-2">
+
+        @if (count($items) > 0)
+            @foreach($items->sortBy(fn($item) => $item->objeto->descricao) as $item)
+
+                <div class="container py-2 text-center">
+
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="text-start"><strong>Objeto: </strong> {{ $item->objeto->descricao }} - <strong>Sigma:
+                                    </strong> <span class="text-primary">{{ $item->objeto->sigma }}</span></h5>
+                                <h5 class="text-end"><strong>Valor: R$ </strong> {{ number_format($item->valor, 2, ',', '.') }}</h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <h5 class="card-title">Cotas</h5>
+
+                            @if (count($item->cotas) > 0)
+                            <div class="container py-3">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-start">Setor</th>
+                                                <th class="text-start"></th>
+                                                <th class="text-end">Quantidade</th>
+                                                <th class="text-end">Empenho</th>
+                                                <th class="text-end">Saldo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($item->cotas->sortBy(fn($cota) => $cota->setor->descricao) as $cota)
+                                                <tr>
+                                                    <td class="text-start">
+                                                        <strong>{{$cota->setor->sigla}}</strong>
+                                                    </td>
+                                                    <td class="text-start">
+                                                        {{$cota->setor->descricao}}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{$cota->quantidade}}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{$cota->empenho}}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ $cota->quantidade - $cota->empenho }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" class="text-end"><strong>Total:</strong></td>
+                                                <td class="text-end"><strong>{{ $item->cotas->sum('quantidade') }}</strong></td>
+                                                <td class="text-end"><strong>{{ $item->cotas->sum('empenho') }}</strong></td>
+                                                <td class="text-end"><strong>{{ $item->cotas->sum('quantidade') - $item->cotas->sum('empenho') }}</strong></td>
+                                            </tr>
+                                        </tfoot>
+
+                                    </table>
+                                </div>
+                            </div>
+                        @else
+                            <p class="card-text">.:Nenhuma cota cadastrada:.</p>
+                        @endif
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            @endforeach
+        @else
+            <div class="container py-2 text-center">
+                .:Nenhum Objeto Cadastrado:.
+            </div>
+        @endif
+
+
+
+    </div>
+
     @can('arp-delete')
         <x-btn-trash />
     @endcan

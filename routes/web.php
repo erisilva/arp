@@ -28,7 +28,7 @@ Route::get('/', function () {
     }
 });
 
-Auth::routes(['verify' => false, 'register' => false]);
+Auth::routes(['verify' => false, 'register' => false, 'reset' => false]);
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile')->middleware('auth');
 Route::post('/profile/update/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update')->middleware('auth');
