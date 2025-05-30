@@ -30,7 +30,7 @@ return new class extends Migration
     private function createView(): string
     {
         return <<<EOD
-                  CREATE VIEW mapa_views AS
+                  CREATE VIEW mapas AS
                         SELECT
                             arps.id,
                             arps.arp,
@@ -70,7 +70,7 @@ return new class extends Migration
     {
         return <<<EOD
 
-            DROP VIEW IF EXISTS `mapa_views`;
+            DROP VIEW IF EXISTS `mapas`;
             EOD;
     }
 };

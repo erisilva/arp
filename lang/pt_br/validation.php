@@ -176,6 +176,7 @@ return [
 
     'custom' => [
         'attribute-name' => [
+
             'address' => 'endereço',
             'age' => 'idade',
             'body' => 'conteúdo',
@@ -213,11 +214,6 @@ return [
             'price' => 'preço',
             'size' => 'tamanho',
             'content' => 'conteúdo',
-            'arp' => 'ARP',
-            'pac' => 'PAC',
-            'pe' => 'PE',
-            'vigenciaInicio' => 'Vigência Início',
-            'vigenciaFim' => 'Vigência Fim',
 
         ],
     ],
@@ -233,6 +229,17 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+
+            'arp' => 'ARP',
+            'pac' => 'PAC',
+            'pe' => 'PE',
+            'vigenciaInicio' => 'Vigência Início',
+            'vigenciaFim' => 'Vigência Fim',
+            'setor_id' => 'Setor',
+            'objeto_id' => 'Objeto',
+
+
+    ],
 
 ];

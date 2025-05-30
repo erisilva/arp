@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'ARP')
+@section('title', 'Mapa')
 
 @section('css-header')
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
@@ -11,7 +11,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <a href="{{ route('arps.index') }}">ARP</a>
+                    <a href="{{ route('mapas.index') }}">Mapa</a>
                 </li>
             </ol>
         </nav>
@@ -20,27 +20,19 @@
 
         <x-btn-group label='MenuPrincipal' class="py-1">
 
-            @can('arp-create')
-                <a class="btn btn-primary" href="{{ route('arps.create') }}" role="button"><x-icon icon='file-earmark' />
-                    {{ __('New') }}</a>
-            @endcan
-
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalFilter"><x-icon
                     icon='funnel' /> {{ __('Filters') }}</button>
 
-            @can('arp-export')
+            @can('mapa-export')
                 <x-dropdown-menu title='Reports' icon='printer'>
 
                     <li>
-                        <a class="dropdown-item"
-                            href="{{route('arps.export.csv', ['arp' => request()->input('arp'), 'pac' => request()->input('pac'), 'pe' => request()->input('pe'), 'vigenciaInicio' => request()->input('vigenciaInicio'), 'vigenciaFim' => request()->input('vigenciaFim')])}}"><x-icon
-                                icon='file-earmark-spreadsheet-fill' /> {{ __('Export') . ' CSV' }}</a>
+                        <a class="dropdown-item" href="#"><x-icon icon='file-earmark-spreadsheet-fill' />
+                            {{ __('Export') . ' CSV' }}</a>
                     </li>
 
                     <li>
-                        <a class="dropdown-item"
-                            href="{{route('arps.export.pdf', ['arp' => request()->input('arp'), 'pac' => request()->input('pac'), 'pe' => request()->input('pe'), 'vigenciaInicio' => request()->input('vigenciaInicio'), 'vigenciaFim' => request()->input('vigenciaFim')])}}"><x-icon
-                                icon='file-pdf-fill' /> {{ __('Export') . ' PDF' }}</a>
+                        <a class="dropdown-item" href="#"><x-icon icon='file-pdf-fill' /> {{ __('Export') . ' PDF' }}</a>
                     </li>
 
                 </x-dropdown-menu>
@@ -60,6 +52,7 @@
                         <th>SIGMA</th>
                         <th>Objeto</th>
                         <th class="text-end">Valor</th>
+                        <th>Setor</th>
                         <th class="text-end">Cotado</th>
                         <th class="text-end">Empenhado</th>
                         <th class="text-end">Saldo</th>
@@ -67,23 +60,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($arps as $arp)
+                    @foreach($mapas as $mapa)
                         <tr>
                             <td class="text-nowrap">
-                                {{ $arp->arp }}
+                                {{ $mapa->arp }}
                             </td>
                             <td class="text-nowrap">
-                                {{ $arp->pac }}
+                                {{ $mapa->pac }}
                             </td>
                             <td class="text-nowrap">
-                                {{ $arp->pe }}
+                                {{ $mapa->pe }}
                             </td>
                             <td>
-                                {{ $arp->vigenciaInicio->format('d/m/Y') . ' a ' . $arp->vigenciaFim->format('d/m/Y') }}
+                                {{ $mapa->vigenciaInicio->format('d/m/Y') . ' a ' . $mapa->vigenciaFim->format('d/m/Y') }}
                             </td>
 
+
                             <td class="text-center">
-                                @if ($arp->vigente == 1)
+                                @if ($mapa->vigente == 1)
                                     <span class="badge text-bg-success">Vigente</span>
                                 @else
                                     <span class="badge text-bg-danger">Vencido</span>
@@ -91,40 +85,39 @@
                             </td>
 
                             <td class="text-nowrap">
-                                {{ $arp->sigma }}
+                                {{ $mapa->sigma }}
                             </td>
 
                             <td>
-                                {{ $arp->objeto }}
+                                {{ $mapa->objeto }}
                             </td>
 
                             <td class="text-end">
-                                {{ 'R$ ' . number_format($arp->valor, 2, ',', '.') }}
+                                {{ 'R$ ' . number_format($mapa->valor, 2, ',', '.') }}
+                            </td>
+
+                            <td>
+                                {{ $mapa->sigla }}
                             </td>
 
                             <td class="text-end">
-                                {{ $arp->cota_total }}
+                                {{ $mapa->quantidade_cota }}
                             </td>
 
                             <td class="text-end">
-                                {{ $arp->empenho_total }}
+                                {{ $mapa->empenho_cota }}
                             </td>
 
                             <td class="text-end">
-                                {{ $arp->cota_total - $arp->empenho_total }}
+                                {{ $mapa->saldo_cota }}
                             </td>
 
                             <td>
                                 <x-btn-group label='Opções'>
 
-                                    @can('arp-edit')
-                                        <a href="{{route('arps.edit', $arp->id)}}" class="btn btn-primary btn-sm"
-                                            role="button"><x-icon icon='pencil-square' /></a>
-                                    @endcan
-
-                                    @can('arp-show')
-                                        <a href="{{route('arps.show', $arp->id)}}" class="btn btn-info btn-sm" role="button"><x-icon
-                                                icon='eye' /></a>
+                                    @can('mapa-show')
+                                        <a href="{{route('mapas.show', $mapa->id)}}" class="btn btn-info btn-sm"
+                                            role="button"><x-icon icon='eye' /></a>
                                     @endcan
 
                                 </x-btn-group>
@@ -135,7 +128,7 @@
             </table>
         </div>
 
-        <x-pagination :query="$arps" />
+        <x-pagination :query="$mapas" />
 
     </div>
 
@@ -143,35 +136,37 @@
 
 
         <div class="container">
-            <form method="GET" action="{{ route('arps.index') }}">
+            <form method="GET" action="{{ route('mapas.index') }}">
 
                 <div class="row g-3">
 
                     <div class="col-md-4">
                         <label for="arp" class="form-label">ARP</label>
-                        <input type="text" class="form-control" id="arp" name="arp" value="{{ session()->get('arp_arp') }}">
+                        <input type="text" class="form-control" id="arp" name="arp"
+                            value="{{ session()->get('mapa_arp') }}">
                     </div>
 
                     <div class="col-md-4">
                         <label for="pac" class="form-label">PAC</label>
-                        <input type="text" class="form-control" id="pac" name="pac" value="{{ session()->get('arp_pac') }}">
+                        <input type="text" class="form-control" id="pac" name="pac"
+                            value="{{ session()->get('mapa_pac') }}">
                     </div>
 
                     <div class="col-md-4">
                         <label for="pe" class="form-label">PE</label>
-                        <input type="text" class="form-control" id="pe" name="pe" value="{{ session()->get('arp_pe') }}">
+                        <input type="text" class="form-control" id="pe" name="pe" value="{{ session()->get('mapa_pe') }}">
                     </div>
 
                     <div class="col-md-4">
                         <label for="vigencia_inicio" class="form-label">Vigência inicial</label>
                         <input type="text" class="form-control" id="vigencia_inicio" name="vigencia_inicio"
-                            value="{{ session()->get('arp_vigencia_inicio') }}" autocomplete="off">
+                            value="{{ session()->get('mapa_vigencia_inicio') }}" autocomplete="off">
                     </div>
 
                     <div class="col-md-4">
                         <label for="vigencia_fim" class="form-label">Vigência final</label>
                         <input type="text" class="form-control" id="vigencia_fim" name="vigencia_fim"
-                            value="{{ session()->get('arp_vigencia_fim') }}" autocomplete="off">
+                            value="{{ session()->get('mapa_vigencia_fim') }}" autocomplete="off">
                     </div>
 
                     <div class="col-md-4">
@@ -179,30 +174,40 @@
                         <select class="form-select" id="vigencia" name="vigencia">
                             <option value="" selected>Exibir Todos</option>
 
-                            <option value="1" {{ (session()->get('arp_vigencia') ?? '') == 1 ? 'selected' : '' }}>Somente Vigentes</option>
+                            <option value="1" {{ (session()->get('mapa_vigencia') ?? '') == 1 ? 'selected' : '' }}>Somente
+                                Vigentes</option>
 
-                            <option value="0" {{ (session()->get('arp_vigencia') ?? '') == 0 ? 'selected' : '' }}>Somente Vencidos</option>
+                            <option value="0" {{ (session()->get('mapa_vigencia') ?? '') == 0 ? 'selected' : '' }}>Somente
+                                Vencidos</option>
                         </select>
                     </div>
 
                     <div class="col-md-4">
                         <label for="sigma" class="form-label">SIGMA</label>
-                        <input type="text" class="form-control" id="sigma" name="sigma" value="{{ session()->get('arp_sigma') }}">
+                        <input type="text" class="form-control" id="sigma" name="sigma"
+                            value="{{ session()->get('mapa_sigma') }}">
                     </div>
 
                     <div class="col-md-8">
                         <label for="objeto" class="form-label">Objeto</label>
                         <input type="text" class="form-control" id="objeto" name="objeto"
-                            value="{{ session()->get('arp_objeto') }}">
+                            value="{{ session()->get('mapa_objeto') }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="setor" class="form-label">Setor</label>
+                        <input type="text" class="form-control" id="setor" name="setor"
+                            value="{{ session()->get('mapa_setor') }}">
                     </div>
 
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='search' />
                             {{ __('Search') }}</button>
 
-                        <a href="{{ route('arps.index', ['arp' => '', 'pac' => '', 'pe' => '', 'vigencia_inicio' => '', 'vigencia_fim' => '', 'vigencia' => '', 'sigma' => '', 'objeto' => '']) }}"
+                        <a href="{{ route('mapas.index', ['mapa' => '', 'pac' => '', 'pe' => '', 'vigencia_inicio' => '', 'vigencia_fim' => '', 'vigencia' => '', 'sigma' => '', 'objeto' => '']) }}"
                             class="btn btn-secondary btn-sm" role="button"><x-icon icon='stars' /> {{ __('Reset') }}</a>
                     </div>
+
 
                 </div>
 
@@ -221,7 +226,7 @@
             var perpage = document.getElementById('perpage');
             perpage.addEventListener('change', function () {
                 perpage = this.options[this.selectedIndex].value;
-                window.open("{{ route('arps.index') }}" + "?perpage=" + perpage, "_self");
+                window.open("{{ route('mapas.index') }}" + "?perpage=" + perpage, "_self");
             });
         });
 

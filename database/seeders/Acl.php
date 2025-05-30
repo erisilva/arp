@@ -102,6 +102,11 @@ class Acl extends Seeder
         $cota_delete = Permission::where('name', '=', 'cota-delete')->get()->first();
         $cota_show = Permission::where('name', '=', 'cota-show')->get()->first();
         $cota_export = Permission::where('name', '=', 'cota-export')->get()->first();
+        // para mapa
+        $mapa_index = Permission::where('name', '=', 'mapa-index')->get()->first();
+        $mapa_show = Permission::where('name', '=', 'mapa-show')->get()->first();
+        $mapa_export = Permission::where('name', '=', 'mapa-export')->get()->first();
+
 
 
         // salva os relacionamentos entre perfil e suas permissões
@@ -159,6 +164,9 @@ class Acl extends Seeder
         $administrador_perfil->permissions()->attach($cota_delete);
         $administrador_perfil->permissions()->attach($cota_show);
         $administrador_perfil->permissions()->attach($cota_export);
+        $administrador_perfil->permissions()->attach($mapa_index);
+        $administrador_perfil->permissions()->attach($mapa_show);
+        $administrador_perfil->permissions()->attach($mapa_export);
 
 
 
@@ -198,6 +206,9 @@ class Acl extends Seeder
         $gerente_perfil->permissions()->attach($cota_edit);
         $gerente_perfil->permissions()->attach($cota_show);
         $gerente_perfil->permissions()->attach($cota_export);
+        $gerente_perfil->permissions()->attach($mapa_index);
+        $gerente_perfil->permissions()->attach($mapa_show);
+        $gerente_perfil->permissions()->attach($mapa_export);
 
 
 
@@ -230,6 +241,9 @@ class Acl extends Seeder
         $operador_perfil->permissions()->attach($cota_edit);
         $operador_perfil->permissions()->attach($cota_show);
         $operador_perfil->permissions()->attach($cota_export);
+        $operador_perfil->permissions()->attach($mapa_index);
+        $operador_perfil->permissions()->attach($mapa_show);
+        $operador_perfil->permissions()->attach($mapa_export);
 
 
         // leitura é um tipo de operador que só pode ler
@@ -246,6 +260,8 @@ class Acl extends Seeder
         $leitor_perfil->permissions()->attach($item_show);
         $leitor_perfil->permissions()->attach($cota_index);
         $leitor_perfil->permissions()->attach($cota_show);
+        $leitor_perfil->permissions()->attach($mapa_index);
+        $leitor_perfil->permissions()->attach($mapa_show);
 
 
 

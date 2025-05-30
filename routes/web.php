@@ -11,6 +11,7 @@ use App\Http\Controllers\ObjetoController;
 use App\Http\Controllers\ArpController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CotaController;
+use App\Http\Controllers\MapaController;
 
 
 
@@ -112,3 +113,8 @@ Route::post('/items/remove', [ItemController::class, 'destroy'])->name('items.de
 Route::post('/cotas/create', [CotaController::class, 'store'])->name('cotas.store')->middleware('auth');
 Route::post('/cotas/remove', [CotaController::class, 'destroy'])->name('cotas.destroy')->middleware('auth');
 Route::post('/cotas/edit', [CotaController::class, 'update'])->name('cotas.update')->middleware('auth');
+
+
+# mapa routes
+
+Route::resource('/mapas', MapaController::class)->middleware('auth');

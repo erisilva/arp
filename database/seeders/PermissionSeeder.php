@@ -236,5 +236,22 @@ class PermissionSeeder extends Seeder
             'description' => 'Exportação de dados das cotas',
         ]);
 
+        // Permissões para a classe Mapa
+
+        DB::table('permissions')->insert([
+            'name' => 'mapa-index',
+            'description' => 'Acessar o Mapa',
+        ]);
+
+        DB::table('permissions')->insert([
+            'name' => 'mapa-show',
+            'description' => 'Mostrar dados de um item do Mapa',
+        ]);
+
+        DB::table('permissions')->insert([
+            'name' => 'mapa-export',
+            'description' => 'Exportação de dados do Mapa',
+        ]);
+
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MapaView;
+use App\Models\Import;
 use Illuminate\Http\Request;
 
-class MapaViewController extends Controller
+class ImportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class MapaViewController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MapaView $mapaView)
+    public function show(Import $import)
     {
         //
     }
@@ -42,7 +42,7 @@ class MapaViewController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MapaView $mapaView)
+    public function edit(Import $import)
     {
         //
     }
@@ -50,7 +50,7 @@ class MapaViewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MapaView $mapaView)
+    public function update(Request $request, Import $import)
     {
         //
     }
@@ -58,7 +58,7 @@ class MapaViewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MapaView $mapaView)
+    public function destroy(Import $import)
     {
         //
     }
