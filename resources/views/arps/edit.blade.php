@@ -225,7 +225,8 @@
                                                             @can('cota-edit')
                                                                 <a href="#" class="btn btn-primary btn-sm" role="button"
                                                                     data-bs-toggle="modal" data-bs-target="#modalEditarCota"
-                                                                    data-cota-id={{ $cota->id }} data-arp-id={{ $item->arp_id }}
+                                                                    data-cota-id={{ $cota->id }}
+                                                                    data-arp-id={{ $item->arp_id }}
                                                                     data-quantidade={{ $cota->quantidade }}
                                                                     data-empenho={{ $cota->empenho }}>
                                                                     <x-icon icon='pencil-square' />
@@ -284,7 +285,11 @@
                                     @can('objeto-edit')
 
                                         <a href="#" class="btn btn-primary btn-sm" role="button" data-bs-toggle="modal"
-                                            data-bs-target="#modalEditarItem" data-item-id={{ $item->id }}>
+                                            data-bs-target="#modalEditarItem"
+                                            data-item-id={{ $item->id }}
+                                            data-arp-id={{ $item->arp_id }}
+                                            data-valor={{ $item->valor }}
+                                            >
                                         <x-icon icon='pencil-square' />
                                         </a>
 
@@ -364,7 +369,7 @@
                                         required readonly tabindex="-1">
                                 </div>
                                 <div class="col-3">
-                                    <label for="valor" class="form-label">Valor</label>
+                                    <label for="valor" class="form-label">Valor(R$)</label>
                                     <input type="text" class="form-control" name="valor" id="valor" value="" autocomplete="off"
                                         required>
                                 </div>
@@ -386,6 +391,77 @@
             </div>
         </div>
     @endcan
+
+
+    @can('item-delete')
+        <!-- Janela para excluir cota -->
+        <div class="modal fade" id="modalExcluirItem" tabindex="-1" aria-labelledby="Excluir objeto do arp" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"><x-icon icon='trash' /> Excluir objeto desse ARP e suas respectivas
+                            cotas/setor?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('items.destroy') }}">
+                            @csrf
+                            <input type="hidden" name="item_id_item_delete" id="item_id_item_delete" value="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-danger btn-lg"><x-icon icon='exclamation-diamond' />
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
+                            Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+    @can('item-edit')
+        <!-- Janela para editar o valor dos objeto da arp -->
+        <div class="modal fade" id="modalEditarItem" tabindex="-1" aria-labelledby="Editar valor do objeto" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"><x-icon icon='pencil-square' /> Editar Valor do Objeto</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('items.update') }}">
+                            @csrf
+                            <input type="hidden" name="arp_id_item_editar" id="arp_id_item_editar" value="">
+                            <input type="hidden" id="item_id_editar" name="item_id_editar" value="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="valor_item_editar" class="form-label">Valor(R$)</label>
+                                    <input type="number" step="0.01" min="0" class="form-control" name="valor_item_editar" id="valor_item_editar"
+                                        value="" autocomplete="off" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='pencil-square' />
+                                        Editar Valor do Objeto
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
+                            Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
 
     @can('cota-create')
         <!-- Janela para incluir nova cota -->
@@ -513,40 +589,6 @@
         </div>
     @endcan
 
-
-    @can('item-delete')
-        <!-- Janela para excluir cota -->
-        <div class="modal fade" id="modalExcluirItem" tabindex="-1" aria-labelledby="Excluir objeto do arp" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5"><x-icon icon='trash' /> Excluir objeto desse ARP e suas respectivas
-                            cotas/setor?</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST" action="{{ route('items.destroy') }}">
-                            @csrf
-                            <input type="hidden" name="item_id_item_delete" id="item_id_item_delete" value="">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-danger btn-lg"><x-icon icon='exclamation-diamond' />
-                                        Confirmar
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
-                            Fechar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endcan
-
-
 @endsection
 @section('script-footer')
     <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
@@ -585,6 +627,7 @@
             'placeholder': ''
         });
 
+
         $('#modalNovaCota').on('show.bs.modal', function (e) {
             $('#item_id').val($(e.relatedTarget).data('item-id'));
             $('#arp_id_criar').val($(e.relatedTarget).data('arp-id'));
@@ -597,6 +640,12 @@
 
         $('#modalExcluirItem').on('show.bs.modal', function (e) {
             $('#item_id_item_delete').val($(e.relatedTarget).data('item-id'));
+        });
+
+        $('#modalEditarItem').on('show.bs.modal', function (e) {
+            $('#arp_id_item_editar').val($(e.relatedTarget).data('arp-id'));
+            $('#item_id_editar').val($(e.relatedTarget).data('item-id'));
+            $('#valor_item_editar').val($(e.relatedTarget).data('valor'));
         });
 
         $('#modalEditarCota').on('show.bs.modal', function (e) {

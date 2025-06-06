@@ -75,7 +75,37 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+        $this->authorize('item-edit');
+
+        $input = $request->validate([
+            'item_id_editar' => 'required|int|exists:items,id',
+            'valor_item_editar' => 'required',
+        ]);
+
+        // Find the item by the provided ID
+        $item = Item::find($input['item_id_editar']);
+
+        // convert the valor to format decimal and prepare data for update
+        $updateData = [
+            'valor' => str_replace(',', '.', str_replace('.', '', $input['valor_item_editar']))
+        ];
+
+        if ($item) {
+            // LOG
+            Log::create([
+                'model_id' => $item->id,
+                'model' => 'Item',
+                'action' => 'update',
+                'changes' => json_encode($item),
+                'user_id' => auth()->id(),
+            ]);
+
+            $item->update($updateData);
+
+            return redirect(route('arps.edit', $item->arp_id))->with('message','Objeto atualizado com sucesso!');
+        } else {
+            return redirect(route('arps.edit', $item ? $item->arp_id : null))->with('message','Objeto não encontrado.');
+        }
     }
 
     /**

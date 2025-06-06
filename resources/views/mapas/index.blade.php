@@ -204,7 +204,7 @@
                         <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='search' />
                             {{ __('Search') }}</button>
 
-                        <a href="{{ route('mapas.index', ['mapa' => '', 'pac' => '', 'pe' => '', 'vigencia_inicio' => '', 'vigencia_fim' => '', 'vigencia' => '', 'sigma' => '', 'objeto' => '']) }}"
+                        <a href="{{ route('mapas.index', ['mapa' => '', 'pac' => '', 'pe' => '', 'vigencia_inicio' => '', 'vigencia_fim' => '', 'vigencia' => '', 'sigma' => '', 'objeto' => '', 'setor' => '']) }}"
                             class="btn btn-secondary btn-sm" role="button"><x-icon icon='stars' /> {{ __('Reset') }}</a>
                     </div>
 
