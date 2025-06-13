@@ -253,5 +253,22 @@ class PermissionSeeder extends Seeder
             'description' => 'Exportação de dados do Mapa',
         ]);
 
+        // Permissões para a classe Import
+
+        DB::table('permissions')->insert([
+            'name' => 'import-index',
+            'description' => 'Acessar a página de importação',
+        ]);
+
+        DB::table('permissions')->insert([
+            'name' => 'import-create',
+            'description' => 'Importar dados de um arquivo',
+        ]);
+
+        DB::table('permissions')->insert([
+            'name' => 'import-show',
+            'description' => 'Mostrar dados de uma importação',
+        ]);
+
     }
 }

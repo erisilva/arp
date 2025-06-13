@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Import;
 use Illuminate\Http\Request;
+use Vtiful\Kernel\Excel;
+use Maatwebsite\Excel\Facades\Excel as ExcelFacade;
 
 class ImportController extends Controller
 {
@@ -12,7 +14,19 @@ class ImportController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('import-index');
+
+        if (request()->has('perpage')) {
+            session(['perPage' => request('perpage')]);
+        }
+
+        return view('imports.index', [
+            'imports' => Import::orderBy('created_at', 'desc')
+                ->paginate(session('perPage', '5'))
+                ->appends(request(['perpage']))
+                ->withPath(env('APP_URL', null) . '/imports'),
+            'perpages' => \App\Models\Perpage::orderBy('valor')->get()
+        ]);
     }
 
     /**
@@ -20,7 +34,9 @@ class ImportController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('import-create');
+
+        return view('imports.create');
     }
 
     /**
@@ -28,37 +44,43 @@ class ImportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('import-create');
+
+
+        $request->validate([
+            'import_type' => 'required|integer|in:1,2,3',
+            'arquivo' => 'required|file|mimes:xls,xlsx|max:5120',
+            'descricao' => 'required|string|max:255',
+        ]);
+
+       // coverter o import_type pata integer
+       // $request->merge(['import_type' => (int) $request->input('import_type')]);
+
+        switch ($request->input('import_type')) {
+            case 1:
+                //return ExcelFacade::download(new \App\Imports\ArpImport,$request->file('file'));
+                //ExcelFacade::import(new \App\Imports\ArpImport, $request->file('arquivo'));
+                /*
+
+                $path1 = $request->file('mcafile')->store('temp');
+                $path=storage_path('app').'/'.$path1;
+                $data = \Excel::import(new UsersImport,$path);
+                */
+
+                $uploadedFile = $request->file('arquivo');
+                ExcelFacade::import(new \App\Imports\ArpImport, $uploadedFile);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Import $import)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Import $import)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Import $import)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Import $import)
     {
         //
     }

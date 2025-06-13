@@ -106,6 +106,13 @@ class Acl extends Seeder
         $mapa_index = Permission::where('name', '=', 'mapa-index')->get()->first();
         $mapa_show = Permission::where('name', '=', 'mapa-show')->get()->first();
         $mapa_export = Permission::where('name', '=', 'mapa-export')->get()->first();
+        // para import
+        $import_index = Permission::where('name', '=', 'import-index')->get()->first();
+        $import_create = Permission::where('name', '=', 'import-create')->get()->first();
+        $import_show = Permission::where('name', '=', 'import-show')->get()->first();
+
+
+
 
 
 
@@ -167,6 +174,9 @@ class Acl extends Seeder
         $administrador_perfil->permissions()->attach($mapa_index);
         $administrador_perfil->permissions()->attach($mapa_show);
         $administrador_perfil->permissions()->attach($mapa_export);
+        $administrador_perfil->permissions()->attach($import_index);
+        $administrador_perfil->permissions()->attach($import_create);
+        $administrador_perfil->permissions()->attach($import_show);
 
 
 
@@ -209,6 +219,9 @@ class Acl extends Seeder
         $gerente_perfil->permissions()->attach($mapa_index);
         $gerente_perfil->permissions()->attach($mapa_show);
         $gerente_perfil->permissions()->attach($mapa_export);
+        $gerente_perfil->permissions()->attach($import_index);
+        $gerente_perfil->permissions()->attach($import_create);
+        $gerente_perfil->permissions()->attach($import_show);
 
 
 

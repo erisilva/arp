@@ -12,6 +12,7 @@ use App\Http\Controllers\ArpController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CotaController;
 use App\Http\Controllers\MapaController;
+use App\Http\Controllers\ImportController;
 
 
 
@@ -118,3 +119,6 @@ Route::post('/cotas/edit', [CotaController::class, 'update'])->name('cotas.updat
 # mapa routes
 
 Route::resource('/mapas', MapaController::class)->middleware('auth');
+
+# import routes
+Route::resource('/imports', ImportController::class)->middleware('auth')->only(['index', 'show', 'create', 'store']);

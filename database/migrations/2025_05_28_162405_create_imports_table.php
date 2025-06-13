@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('imports', function (Blueprint $table) {
             $table->id();
+            $table->string('descricao');
+            $table->text('resultado');
+            $table->text('data')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamps();
         });

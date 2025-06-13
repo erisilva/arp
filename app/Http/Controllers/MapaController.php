@@ -6,6 +6,8 @@ use App\Models\Mapa;
 use Illuminate\Http\Request;
 
 use App\Models\Perpage;
+use App\Models\Arp;
+use App\Models\Item;
 
 
 class MapaController extends Controller
@@ -38,7 +40,17 @@ class MapaController extends Controller
      */
     public function show(Mapa $mapa)
     {
-        //
+        $this->authorize('mapa-show');
+
+        $arp = Arp::findOrFail($mapa->id);
+        if (!$arp) {
+            abort(404, 'ARP not found');
+        }
+
+        return view('mapas.show', [
+            'arp' => $arp,
+            'items' => Item::where('arp_id', $arp->id)->get()
+        ]);
     }
 
 }

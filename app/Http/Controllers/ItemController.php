@@ -87,7 +87,7 @@ class ItemController extends Controller
 
         // convert the valor to format decimal and prepare data for update
         $updateData = [
-            'valor' => str_replace(',', '.', str_replace('.', '', $input['valor_item_editar']))
+            'valor' => $input['valor_item_editar']
         ];
 
         if ($item) {
