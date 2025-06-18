@@ -17,6 +17,14 @@
     </div>
 
     <div class="container">
+
+        {{-- Display any validation errors from arquivo --}}
+        @if ($errors->has('arquivo'))
+            <div class="alert alert-danger">
+                <strong>{{ $errors->first('arquivo') }}</strong>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('imports.store') }}"  enctype="multipart/form-data">
             @csrf
             <div class="row g-3">
@@ -32,9 +40,9 @@
                     <label for="import_type" class="form-label">Selecione o tipo de importação</label>
                     <select class="form-select  @error('descricao') is-invalid @enderror" id="import_type" name="import_type" required>
                         <option value=''>Selecione o tipo de importação</option>
-                        <option value='1'>Modelo 1 - Importar Cotas</option>
-                        <option value='2'>Modelo 1 - importar Empenhos</option>
-                        <option value='3'>Modelo 2 - Importar Cotas e Empenhos</option>
+                        <option value='1'>Modelo 1 - Importar Somente Cotas</option>
+                        <option value='2'>Modelo 2 - importar Somente Empenhos</option>
+                        <option value='3'>Modelo 3 - Importar Cotas e Empenhos</option>
                     </select>
                     @error('import_type')
                         <div class="invalid-feedback">{{ $message }}</div>

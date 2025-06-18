@@ -67,8 +67,12 @@ class ImportController extends Controller
                 $data = \Excel::import(new UsersImport,$path);
                 */
 
-                $uploadedFile = $request->file('arquivo');
-                ExcelFacade::import(new \App\Imports\ArpImport, $uploadedFile);
+                try {
+                    $uploadedFile = $request->file('arquivo');
+                    ExcelFacade::import(new \App\Imports\ArpImport, $uploadedFile);
+                } catch (\Exception $e) {
+                    return back()->withErrors(['arquivo' => 'Erro ao importar o arquivo: ' . $e->getMessage()]);
+                }
                 break;
             case 2:
                 break;
