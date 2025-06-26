@@ -75,6 +75,13 @@
                                         </a>
                                     </li>
                                 @endcan
+                                @can('import-index')
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('imports.index') }}">
+                                            <x-icon icon='archive-fill' /> Importações
+                                        </a>
+                                    </li>
+                                @endcan
                                 @can('user-index')
                                     <li>
                                         <a class="dropdown-item" href="{{ route('users.index') }}">

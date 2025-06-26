@@ -109,7 +109,11 @@
                             </td>
 
                             <td class="text-end">
-                                {{ $mapa->saldo_cota }}
+                                @if($mapa->saldo_cota < 0)
+                                    <strong class="text-danger">{{ $mapa->saldo_cota }}</strong>
+                                @else
+                                    <strong>{{ $mapa->saldo_cota }}</strong>
+                                @endif
                             </td>
 
                             <td>

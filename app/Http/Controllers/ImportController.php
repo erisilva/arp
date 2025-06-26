@@ -48,7 +48,7 @@ class ImportController extends Controller
 
 
         $request->validate([
-            'import_type' => 'required|integer|in:1,2,3',
+            'import_type' => 'required|integer|in:1,2,3,4',
             'arquivo' => 'required|file|mimes:xls,xlsx|max:5120',
             'descricao' => 'required|string|max:255',
         ]);
@@ -69,14 +69,35 @@ class ImportController extends Controller
 
                 try {
                     $uploadedFile = $request->file('arquivo');
-                    ExcelFacade::import(new \App\Imports\ArpImport, $uploadedFile);
+                    ExcelFacade::import(new \App\Imports\ArpImport1, $uploadedFile);
+                    // salva na classe import o usuario que fez a importacao e a descricao que ele criou
+                    Import::create([
+                        'user_id' => auth()->id(),
+                        'descricao' => $request->input('descricao'),
+                        'resultado' => 'Importação realizada com sucesso (modelo 1)',
+                        'data' => json_encode($uploadedFile->getClientOriginalName()),
+                    ]);
+                    return redirect()->route('imports.index')->with('message', 'Arquivo (modelo 1) importado com sucesso!');
                 } catch (\Exception $e) {
                     return back()->withErrors(['arquivo' => 'Erro ao importar o arquivo: ' . $e->getMessage()]);
                 }
-                break;
             case 2:
-                break;
+                try {
+                    $uploadedFile = $request->file('arquivo');
+                    ExcelFacade::import(new \App\Imports\ArpImport2, $uploadedFile);
+                    Import::create([
+                        'user_id' => auth()->id(),
+                        'descricao' => $request->input('descricao'),
+                        'resultado' => 'Importação realizada com sucesso (modelo 2)',
+                        'data' => json_encode($uploadedFile->getClientOriginalName()),
+                    ]);
+                    return redirect()->route('imports.index')->with('message', 'Arquivo (modelo 2) importado com sucesso!');
+                } catch (\Exception $e) {
+                    return back()->withErrors(['arquivo' => 'Erro ao importar o arquivo: ' . $e->getMessage()]);
+                }
             case 3:
+                break;
+            case 4:
                 break;
         }
     }

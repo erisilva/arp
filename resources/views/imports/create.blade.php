@@ -43,6 +43,7 @@
                         <option value='1'>Modelo 1 - Importar Somente Cotas</option>
                         <option value='2'>Modelo 2 - importar Somente Empenhos</option>
                         <option value='3'>Modelo 3 - Importar Cotas e Empenhos</option>
+                        <option value='4'>Modelo 4 - Importar Cotas e Empenhos</option>
                     </select>
                     @error('import_type')
                         <div class="invalid-feedback">{{ $message }}</div>

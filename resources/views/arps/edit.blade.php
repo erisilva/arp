@@ -217,7 +217,12 @@
                                                         {{$cota->empenho}}
                                                     </td>
                                                     <td class="text-end">
-                                                        {{ $cota->quantidade - $cota->empenho }}
+                                                        @php
+                                                            $saldo = $cota->quantidade - $cota->empenho;
+                                                        @endphp
+                                                        <strong @if($saldo < 0) class="text-danger" @endif>
+                                                            {{ $saldo }}
+                                                        </strong>
                                                     </td>
                                                     <td>
                                                         <x-btn-group label='Opções'>

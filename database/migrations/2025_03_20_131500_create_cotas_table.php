@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('cotas', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantidade')->unsigned();
-            $table->integer('empenho')->unsigned();
+            $table->integer('quantidade');
+            $table->integer('empenho');
             $table->foreignId('setor_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->foreignId('item_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamps();

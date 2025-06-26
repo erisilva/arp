@@ -49,9 +49,9 @@ return new class extends Migration
                             coalesce((select sum(cotas.empenho) from cotas where cotas.item_id = items.id), 0) as empenho_total,
                             setors.sigla,
                             setors.descricao as setor,
-                            cotas.quantidade as quantidade_cota,
-                            cotas.empenho as empenho_cota,
-                            (cotas.quantidade - cotas.empenho) as saldo_cota
+                            CONVERT(cotas.quantidade, SIGNED) as quantidade_cota,
+                            CONVERT(cotas.empenho, SIGNED) as empenho_cota,
+                            CONVERT(cotas.quantidade - cotas.empenho, SIGNED) as saldo_cota
                         FROM arps
                             inner join items on (items.arp_id = arps.id)
                                 inner join objetos on (objetos.id = items.objeto_id)

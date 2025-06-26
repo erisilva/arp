@@ -207,11 +207,8 @@ class ArpController extends Controller
             'Pragma' => 'public'
         ];
 
-        $arps = Arp::select('arp', 'pac', 'pe', 'vigenciaInicio', 'vigenciaFim')
-            ->orderBy('arp', 'asc')
-            ->orderBy('pac', 'asc')
-            ->orderBy('pe', 'asc')
-            ->filter(request(['arp', 'pac', 'pe', 'vigenciaInicio', 'vigenciaFim']));
+        $arps = ArpView::orderBy('arp', 'asc')
+            ->filter(request(['arp', 'pac', 'pe', 'vigencia_inicio', 'vigencia_fim', 'vigencia', 'sigma', 'objeto']));
 
         $list = $arps->get()->toArray();
 
@@ -228,7 +225,7 @@ class ArpController extends Controller
             $FH = fopen('php://output', 'w');
             fputs($FH, chr(0xEF) . chr(0xBB) . chr(0xBF));
             foreach ($list as $row) {
-                fputcsv($FH, $row, ',');
+                fputcsv($FH, $row, ';');
             }
             fclose($FH);
         };
@@ -244,12 +241,9 @@ class ArpController extends Controller
         $this->authorize('arp-export');
 
         return Pdf::loadView('arps.report', [
-            'dataset' => Arp::select('arp', 'pac', 'pe', 'vigenciaInicio', 'vigenciaFim')
-                ->orderBy('arp', 'asc')
-                ->orderBy('pac', 'asc')
-                ->orderBy('pe', 'asc')
+            'dataset' => ArpView::orderBy('arp', 'asc')
                 ->filter(request(['arp', 'pac', 'pe', 'vigenciaInicio', 'vigenciaFim']))
                 ->get()
-        ])->download('Arp' . '_' . date("Y-m-d H:i:s") . '.pdf');
+        ])->setPaper('a4', 'landscape')->download('Arp' . '_' . date("Y-m-d H:i:s") . '.pdf');
     }
 }

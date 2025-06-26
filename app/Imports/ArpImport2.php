@@ -5,7 +5,7 @@ use App\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class ArpImport implements ToCollection
+class ArpImport2 implements ToCollection
 {
     public function collection(Collection $rows)
     {
@@ -78,15 +78,15 @@ class ArpImport implements ToCollection
                 // 6 - Loop pelos setores (a partir da coluna I)
                 foreach ($setores as $idx => $siglaSetor) {
                     $colIndex = 8 + $idx;
-                    $valorCota = $row[$colIndex] ?? null;
-                    if ($valorCota === null || $valorCota === '') {
+                    $valorEmpenho = $row[$colIndex] ?? null;
+                    if ($valorEmpenho === null || $valorEmpenho === '') {
                         continue;
                     }
 
                     // Busca setor pelo campo texto (sigla)
                     $setor = \App\Models\Setor::where('sigla', $siglaSetor)->first();
                     if (!$setor) {
-                        // Se não existir, pode criar ou pular, dependendo da regra de negócio
+                        // Se não existir pular
                         continue;
                     }
 
@@ -96,17 +96,16 @@ class ArpImport implements ToCollection
                         ->first();
 
                     if ($cota) {
-                        $cota->quantidade = $valorCota;
+                        $cota->empenho = $valorEmpenho;
                         $cota->save();
                     } else {
                         \App\Models\Cota::create([
                             'item_id' => $item->id,
                             'setor_id' => $setor->id,
-                            'quantidade' => $valorCota,
-                            'empenho' => 0,
+                            'quantidade' => 0,
+                            'empenho' => $valorEmpenho,
                         ]);
                     }
-
                 }
             }
         }
