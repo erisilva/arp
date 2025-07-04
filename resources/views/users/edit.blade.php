@@ -31,7 +31,8 @@
                         value="{{ old('name') ?? $user->name }}">
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror           </div>
+                    @enderror
+                </div>
                 <div class="col-md-6">
                     <label for="email" class="form-label">{{ __('Email Address') }}</label>
                     <input type="email" class="form-control" name="email" value="{{ old('email') ?? $user->email }}"
@@ -60,31 +61,64 @@
                 </div>
 
                 @foreach($roles as $role)
-                            @php
-                                $checked = '';
-                                if (old('roles') ?? false) {
-                                    foreach (old('roles') as $key => $id) {
-                                        if ($id == $role->id) {
-                                            $checked = "checked";
-                                        }
-                                    }
-                                } else {
-                                    if ($user ?? false) {
-                                        foreach ($user->roles as $key => $roleList) {
-                                            if ($roleList->id == $role->id) {
-                                                $checked = "checked";
-                                            }
-                                        }
+                    @php
+                        $checked = '';
+                        if (old('roles') ?? false) {
+                            foreach (old('roles') as $key => $id) {
+                                if ($id == $role->id) {
+                                    $checked = "checked";
+                                }
+                            }
+                        } else {
+                            if ($user ?? false) {
+                                foreach ($user->roles as $key => $roleList) {
+                                    if ($roleList->id == $role->id) {
+                                        $checked = "checked";
                                     }
                                 }
-                            @endphp
-                            <div class="col-md-4">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="roles[]" value="{{$role->id}}" {{$checked}}>
-                                    <label class="form-check-label" for="roles">{{$role->description}}</label>
-                                </div>
-                            </div>
+                            }
+                        }
+                    @endphp
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="roles[]" value="{{$role->id}}" {{$checked}}>
+                            <label class="form-check-label" for="roles">{{$role->description}}</label>
+                        </div>
+                    </div>
                 @endforeach
+
+                <div class="col-12">
+                    <p class="text-center bg-primary text-white">Setores</p>
+                </div>
+
+                @foreach($setores as $setor)
+                    @php
+                        $checked = '';
+                        if (old('setores') ?? false) {
+                            foreach (old('setores') as $key => $id) {
+                                if ($id == $setor->id) {
+                                    $checked = "checked";
+                                }
+                            }
+                        } else {
+                            if ($user ?? false) {
+                                foreach ($user->setors as $key => $roleList) {
+                                    if ($roleList->id == $setor->id) {
+                                        $checked = "checked";
+                                    }
+                                }
+                            }
+                        }
+                    @endphp
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="setors[]" value="{{$setor->id}}" {{$checked}}>
+                            <label class="form-check-label" for="setors">{{ $setor->sigla }} - {{ $setor->descricao }}</label>
+                        </div>
+                    </div>
+                @endforeach
+
+
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary btn-lg">
                         <x-icon icon='pencil-square' />{{ __('Edit') }}

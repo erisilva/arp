@@ -277,7 +277,19 @@ class Acl extends Seeder
         $leitor_perfil->permissions()->attach($mapa_show);
 
 
+        // atach all setors for $administrador
+        if ($administrador) {
+            foreach (\App\Models\Setor::all() as $setor) {
+                $administrador->setors()->attach($setor->id);
+            }
+        }
 
+        //atach all setors for $gerente
+        if ($gerente) {
+            foreach (\App\Models\Setor::all() as $setor) {
+                $gerente->setors()->attach($setor->id);
+            }
+        }
 
 
     }

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class User extends Authenticatable
@@ -151,4 +152,23 @@ class User extends Authenticatable
             $query->where('email', 'like', '%' . session()->get('user_email') . '%');
         }
     }
+
+    /**
+     * Get the user empenhos.
+     *
+     */
+    public function empenhos(): HasMany
+    {
+        return $this->hasMany(Empenho::class);
+    }
+
+    /**
+     * The setors that belong to the user.
+     *
+     */
+    public function setors(): BelongsToMany
+    {
+        return $this->belongsToMany(Setor::class);
+    }
+
 }

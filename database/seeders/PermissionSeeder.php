@@ -270,5 +270,32 @@ class PermissionSeeder extends Seeder
             'description' => 'Mostrar dados de uma importação',
         ]);
 
+        // Permissões para a classe Empenhos
+
+        DB::table('permissions')->insert([
+            'name' => 'empenho-index',
+            'description' => 'Lista de empenhos',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'empenho-create',
+            'description' => 'Registrar novo empenho',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'empenho-edit',
+            'description' => 'Alterar dados do empenho',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'empenho-delete',
+            'description' => 'Excluir empenho',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'empenho-show',
+            'description' => 'Mostrar dados do empenho',
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'empenho-export',
+            'description' => 'Exportação de dados dos empenhos',
+        ]);
+
     }
 }
