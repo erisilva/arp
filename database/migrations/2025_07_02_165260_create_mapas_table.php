@@ -51,13 +51,15 @@ return new class extends Migration
                             setors.descricao as setor,
                             CONVERT(cotas.quantidade, SIGNED) as quantidade_cota,
                             CONVERT(cotas.empenho, SIGNED) as empenho_cota,
-                            CONVERT(cotas.quantidade - cotas.empenho, SIGNED) as saldo_cota
+                            CONVERT(cotas.quantidade - cotas.empenho, SIGNED) as saldo_cota,
+                            setors.id as setor_id,
+                            cotas.id as cota_id
                         FROM arps
                             inner join items on (items.arp_id = arps.id)
                                 inner join objetos on (objetos.id = items.objeto_id)
                             inner join cotas on (cotas.item_id = items.id)
                                 inner join setors on (setors.id = cotas.setor_id)
-                        order by arps.arp, objetos.descricao;
+                        order by arps.arp, objetos.descricao, setors.sigla;
                 EOD;
     }
 

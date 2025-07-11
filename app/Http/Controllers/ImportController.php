@@ -50,7 +50,7 @@ class ImportController extends Controller
         $request->validate([
             'import_type' => 'required|integer|in:1,2,3,4',
             'arquivo' => 'required|file|mimes:xls,xlsx|max:5120',
-            'descricao' => 'required|string|max:255',
+            'descricao' => 'max:255',
         ]);
 
        // coverter o import_type pata integer

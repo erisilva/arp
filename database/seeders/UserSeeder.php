@@ -1,11 +1,11 @@
 <?php
- 
+
 namespace Database\Seeders;
- 
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
- 
+
 class UserSeeder extends Seeder
 {
     /**
@@ -43,6 +43,15 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Leitor',
             'email' => 'leitor@mail.com',
+            'active' => 'Y',
+            'password' => Hash::make('123456'),
+            'theme_id' => 1,
+            'email_verified_at' => now(),
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'Empenho',
+            'email' => 'empenho@mail.com',
             'active' => 'Y',
             'password' => Hash::make('123456'),
             'theme_id' => 1,

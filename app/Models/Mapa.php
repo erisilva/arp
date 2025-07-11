@@ -17,6 +17,9 @@ class Mapa extends Model
 
     public function scopeFilter($query, array $filters)
     {
+        // mostrando somente os setores que o usuario logado possui acesso
+        $query->whereIn('setor_id', auth()->user()->setors->pluck('id'));
+
         // start session values if not yet initialized
         if (!session()->exists('mapa_arp')){
             session(['mapa_arp' => '']);

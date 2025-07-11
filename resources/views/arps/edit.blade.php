@@ -490,15 +490,9 @@
                                         value="{{ old('setor') ?? '' }}" autocomplete="off" required>
                                 </div>
 
-                                <div class="col-2">
+                                <div class="col-4">
                                     <label for="quantidade" class="form-label">Quantidade</label>
                                     <input type="number" class="form-control" name="quantidade" id="quantidade" value=""
-                                        autocomplete="off" required>
-                                </div>
-
-                                <div class="col-2">
-                                    <label for="empenho" class="form-label">Empenho</label>
-                                    <input type="number" class="form-control" name="empenho" id="empenho" value="{{ old('empenho', 0) }}"
                                         autocomplete="off" required>
                                 </div>
 
@@ -570,11 +564,6 @@
                                 <div class="col-12">
                                     <label for="quantidade_editar" class="form-label">Quantidade</label>
                                     <input type="number" class="form-control" name="quantidade_editar" id="quantidade_editar"
-                                        value="" autocomplete="off" required>
-                                </div>
-                                <div class="col-12">
-                                    <label for="empenho_editar" class="form-label">Empenho</label>
-                                    <input type="number" class="form-control" name="empenho_editar" id="empenho_editar"
                                         value="" autocomplete="off" required>
                                 </div>
                                 <div class="col-12">

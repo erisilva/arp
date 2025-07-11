@@ -29,7 +29,7 @@ class MapaController extends Controller
                 ->filter(request(['arp', 'pac', 'pe', 'vigencia_inicio', 'vigencia_fim', 'vigencia', 'sigma', 'objeto', 'setor']))
                 ->paginate(session('perPage', '5'))
                 ->appends(request(['arp', 'pac', 'pe', 'vigencia_inicio', 'vigencia_fim', 'vigencia', 'sigma', 'objeto', 'setor']))
-                ->withPath(env('APP_URL', null) . '/arps'),
+                ->withPath(env('APP_URL', null) . '/mapas'),
             'perpages' => Perpage::orderBy('valor')->get()
         ]);
     }

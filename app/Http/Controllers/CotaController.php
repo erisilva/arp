@@ -38,9 +38,18 @@ class CotaController extends Controller
             'setor_id' => 'required|int|exists:setors,id',
             'arp_id_criar' => 'required|int|exists:arps,id',
             'quantidade' => 'required|int|min:1',
-            'empenho' => 'required|int|min:0',
         ]);
 
+        # verifica se já existe cota cadastrada para esse setor e item
+        $existingCota = Cota::where('item_id', $input['item_id'])
+            ->where('setor_id', $input['setor_id'])
+            ->first();
+
+        if ($existingCota) {
+            return redirect(route('arps.edit', $input['arp_id_criar']))->with('message', 'Já existe uma cota cadastrada para este setor e item.');
+        }
+
+        $input['empenho'] = 0;
         $new_cota = Cota::create($input);
 
         // LOG
@@ -82,12 +91,11 @@ class CotaController extends Controller
             'arp_id_editar' => 'required|int|exists:arps,id',
             'cota_id_editar' => 'required|int|exists:cotas,id',
             'quantidade_editar' => 'required|int|min:1',
-            'empenho_editar' => 'required|int|min:0',
+
         ]);
 
         $cota = Cota::find($input['cota_id_editar']);
         $cota->quantidade = $request->quantidade_editar;
-        $cota->empenho = $request->empenho_editar;
         $cota->save();
 
         // LOG
@@ -127,7 +135,16 @@ class CotaController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $cota->delete();
+        try {
+            // Exclui todos os empenhos relacionados à cota
+            $cota->empenhos()->delete();
+
+            // Exclui a cota
+            $cota->delete();
+        } catch (\Exception $e) {
+            return redirect(route('arps.edit', $input['arp_id']))
+            ->with('message', 'Erro ao remover cota e seus empenhos: ' . $e->getMessage());
+        }
 
         return redirect(route('arps.edit', $input['arp_id']))->with('message','Cota removida com sucesso!');
     }

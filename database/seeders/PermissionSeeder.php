@@ -237,7 +237,6 @@ class PermissionSeeder extends Seeder
         ]);
 
         // Permissões para a classe Mapa
-
         DB::table('permissions')->insert([
             'name' => 'mapa-index',
             'description' => 'Acessar o Mapa',
@@ -254,7 +253,6 @@ class PermissionSeeder extends Seeder
         ]);
 
         // Permissões para a classe Import
-
         DB::table('permissions')->insert([
             'name' => 'import-index',
             'description' => 'Acessar a página de importação',
@@ -271,11 +269,6 @@ class PermissionSeeder extends Seeder
         ]);
 
         // Permissões para a classe Empenhos
-
-        DB::table('permissions')->insert([
-            'name' => 'empenho-index',
-            'description' => 'Lista de empenhos',
-        ]);
         DB::table('permissions')->insert([
             'name' => 'empenho-create',
             'description' => 'Registrar novo empenho',
@@ -295,7 +288,6 @@ class PermissionSeeder extends Seeder
         DB::table('permissions')->insert([
             'name' => 'empenho-export',
             'description' => 'Exportação de dados dos empenhos',
-        ]);
-
+        ]); // por enquanto não tem nenhum relatorio
     }
 }

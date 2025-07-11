@@ -31,5 +31,10 @@ class RoleSeeder extends Seeder
             'name' => 'leitor',
             'description' => 'Leitor',
         ]);
+
+        DB::table('roles')->insert([
+            'name' => 'empenho',
+            'description' => 'Empenho',
+        ]);
     }
 }

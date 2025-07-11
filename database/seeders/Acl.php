@@ -28,18 +28,21 @@ class Acl extends Seeder
         $gerente = User::where('email', '=', 'gerente@mail.com')->get()->first();
         $operador = User::where('email', '=', 'operador@mail.com')->get()->first();
         $leitor = User::where('email', '=', 'leitor@mail.com')->get()->first();
+        $empenho = User::where('email', '=', 'empenho@mail.com')->get()->first();
 
         // recebi os perfis
         $administrador_perfil = Role::where('name', '=', 'admin')->get()->first();
         $gerente_perfil = Role::where('name', '=', 'gerente')->get()->first();
         $operador_perfil = Role::where('name', '=', 'operador')->get()->first();
         $leitor_perfil = Role::where('name', '=', 'leitor')->get()->first();
+        $empenho_perfil = Role::where('name', '=', 'empenho')->get()->first();
 
         // salva os relacionamentos entre operador e perfil
         $administrador->roles()->attach($administrador_perfil);
         $gerente->roles()->attach($gerente_perfil);
         $operador->roles()->attach($operador_perfil);
         $leitor->roles()->attach($leitor_perfil);
+        $empenho->roles()->attach($empenho_perfil);
 
         // recebi as permissoes
         // para operadores
@@ -110,6 +113,16 @@ class Acl extends Seeder
         $import_index = Permission::where('name', '=', 'import-index')->get()->first();
         $import_create = Permission::where('name', '=', 'import-create')->get()->first();
         $import_show = Permission::where('name', '=', 'import-show')->get()->first();
+        // para empenhos
+        $empenho_index = Permission::where('name', '=', 'empenho-index')->get()->first();
+        $empenho_create = Permission::where('name', '=', 'empenho-create')->get()->first();
+        $empenho_edit = Permission::where('name', '=', 'empenho-edit')->get()->first();
+        $empenho_delete = Permission::where('name', '=', 'empenho-delete')->get()->first();
+        $empenho_show = Permission::where('name', '=', 'empenho-show')->get()->first();
+        $empenho_export = Permission::where('name', '=', 'empenho-export')->get()->first();
+
+
+
 
 
 
@@ -177,6 +190,12 @@ class Acl extends Seeder
         $administrador_perfil->permissions()->attach($import_index);
         $administrador_perfil->permissions()->attach($import_create);
         $administrador_perfil->permissions()->attach($import_show);
+        #$administrador_perfil->permissions()->attach($empenho_index);
+        $administrador_perfil->permissions()->attach($empenho_create);
+        $administrador_perfil->permissions()->attach($empenho_edit);
+        $administrador_perfil->permissions()->attach($empenho_delete);
+        $administrador_perfil->permissions()->attach($empenho_show);
+        $administrador_perfil->permissions()->attach($empenho_export);
 
 
 
@@ -222,6 +241,13 @@ class Acl extends Seeder
         $gerente_perfil->permissions()->attach($import_index);
         $gerente_perfil->permissions()->attach($import_create);
         $gerente_perfil->permissions()->attach($import_show);
+        #$gerente_perfil->permissions()->attach($empenho_index);
+        $gerente_perfil->permissions()->attach($empenho_create);
+        $gerente_perfil->permissions()->attach($empenho_edit);
+        $gerente_perfil->permissions()->attach($empenho_delete);
+        $gerente_perfil->permissions()->attach($empenho_show);
+        $gerente_perfil->permissions()->attach($empenho_export);
+
 
 
 
@@ -257,6 +283,11 @@ class Acl extends Seeder
         $operador_perfil->permissions()->attach($mapa_index);
         $operador_perfil->permissions()->attach($mapa_show);
         $operador_perfil->permissions()->attach($mapa_export);
+        #$operador_perfil->permissions()->attach($empenho_index);
+        $operador_perfil->permissions()->attach($empenho_create);
+        $operador_perfil->permissions()->attach($empenho_edit);
+        $operador_perfil->permissions()->attach($empenho_show);
+        $operador_perfil->permissions()->attach($empenho_export);
 
 
         // leitura é um tipo de operador que só pode ler
@@ -275,6 +306,29 @@ class Acl extends Seeder
         $leitor_perfil->permissions()->attach($cota_show);
         $leitor_perfil->permissions()->attach($mapa_index);
         $leitor_perfil->permissions()->attach($mapa_show);
+        #$leitor_perfil->permissions()->attach($empenho_index);
+        $leitor_perfil->permissions()->attach($empenho_show);
+
+        // o perfil empenho é igual ao leitor, porém poderá cadastrar empenhos
+        $empenho_perfil->permissions()->attach($user_index);
+        $empenho_perfil->permissions()->attach($user_show);
+        $empenho_perfil->permissions()->attach($setor_index);
+        $empenho_perfil->permissions()->attach($setor_show);
+        $empenho_perfil->permissions()->attach($objeto_index);
+        $empenho_perfil->permissions()->attach($objeto_show);
+        $empenho_perfil->permissions()->attach($arp_index);
+        $empenho_perfil->permissions()->attach($arp_show);
+        $empenho_perfil->permissions()->attach($item_index);
+        $empenho_perfil->permissions()->attach($item_show);
+        $empenho_perfil->permissions()->attach($cota_index);
+        $empenho_perfil->permissions()->attach($cota_show);
+        $empenho_perfil->permissions()->attach($mapa_index);
+        $empenho_perfil->permissions()->attach($mapa_show);
+        #$empenho_perfil->permissions()->attach($empenho_index);
+        $empenho_perfil->permissions()->attach($empenho_create);
+        $empenho_perfil->permissions()->attach($empenho_edit);
+        $empenho_perfil->permissions()->attach($empenho_show);
+        $empenho_perfil->permissions()->attach($empenho_export);
 
 
         // atach all setors for $administrador

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mapa')
+@section('title', 'Empenhos')
 
 @section('css-header')
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
@@ -11,7 +11,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">
-                    <a href="{{ route('mapas.index') }}">Mapa</a>
+                    <a href="{{ route('empenhos.index') }}">Empenhos</a>
                 </li>
             </ol>
         </nav>
@@ -120,15 +120,9 @@
                                 <x-btn-group label='Opções'>
 
                                     @can('mapa-show')
-                                        <a href="{{route('mapas.show', $mapa->id)}}" class="btn btn-info btn-sm"
+                                        <a href="{{route('empenhos.show', $mapa->id)}}" class="btn btn-info btn-sm"
                                             role="button"><x-icon icon='eye' /></a>
                                     @endcan
-
-                                    @can('empenho-show')
-                                        <a href="{{route('empenhos.show', $mapa->cota_id)}}" class="btn btn-primary btn-sm"
-                                            role="button"><x-icon icon='node-plus' /></a>
-                                    @endcan
-
 
                                 </x-btn-group>
                             </td>
@@ -146,37 +140,37 @@
 
 
         <div class="container">
-            <form method="GET" action="{{ route('mapas.index') }}">
+            <form method="GET" action="{{ route('empenhos.index') }}">
 
                 <div class="row g-3">
 
                     <div class="col-md-4">
                         <label for="arp" class="form-label">ARP</label>
                         <input type="text" class="form-control" id="arp" name="arp"
-                            value="{{ session()->get('mapa_arp') }}">
+                            value="{{ session()->get('empenho_arp') }}">
                     </div>
 
                     <div class="col-md-4">
                         <label for="pac" class="form-label">PAC</label>
                         <input type="text" class="form-control" id="pac" name="pac"
-                            value="{{ session()->get('mapa_pac') }}">
+                            value="{{ session()->get('empenho_pac') }}">
                     </div>
 
                     <div class="col-md-4">
                         <label for="pe" class="form-label">PE</label>
-                        <input type="text" class="form-control" id="pe" name="pe" value="{{ session()->get('mapa_pe') }}">
+                        <input type="text" class="form-control" id="pe" name="pe" value="{{ session()->get('empenho_pe') }}">
                     </div>
 
                     <div class="col-md-4">
                         <label for="vigencia_inicio" class="form-label">Vigência inicial</label>
                         <input type="text" class="form-control" id="vigencia_inicio" name="vigencia_inicio"
-                            value="{{ session()->get('mapa_vigencia_inicio') }}" autocomplete="off">
+                            value="{{ session()->get('empenho_vigencia_inicio') }}" autocomplete="off">
                     </div>
 
                     <div class="col-md-4">
                         <label for="vigencia_fim" class="form-label">Vigência final</label>
                         <input type="text" class="form-control" id="vigencia_fim" name="vigencia_fim"
-                            value="{{ session()->get('mapa_vigencia_fim') }}" autocomplete="off">
+                            value="{{ session()->get('empenho_vigencia_fim') }}" autocomplete="off">
                     </div>
 
                     <div class="col-md-4">
@@ -184,10 +178,10 @@
                         <select class="form-select" id="vigencia" name="vigencia">
                             <option value="" selected>Exibir Todos</option>
 
-                            <option value="1" {{ (session()->get('mapa_vigencia') ?? '') == 1 ? 'selected' : '' }}>Somente
+                            <option value="1" {{ (session()->get('empenho_vigencia') ?? '') == 1 ? 'selected' : '' }}>Somente
                                 Vigentes</option>
 
-                            <option value="0" {{ (session()->get('mapa_vigencia') ?? '') == 0 ? 'selected' : '' }}>Somente
+                            <option value="0" {{ (session()->get('empenho_vigencia') ?? '') == 0 ? 'selected' : '' }}>Somente
                                 Vencidos</option>
                         </select>
                     </div>
@@ -195,19 +189,19 @@
                     <div class="col-md-4">
                         <label for="sigma" class="form-label">SIGMA</label>
                         <input type="text" class="form-control" id="sigma" name="sigma"
-                            value="{{ session()->get('mapa_sigma') }}">
+                            value="{{ session()->get('empenho_sigma') }}">
                     </div>
 
                     <div class="col-md-8">
                         <label for="objeto" class="form-label">Objeto</label>
                         <input type="text" class="form-control" id="objeto" name="objeto"
-                            value="{{ session()->get('mapa_objeto') }}">
+                            value="{{ session()->get('empenho_objeto') }}">
                     </div>
 
                     <div class="col-12">
                         <label for="setor" class="form-label">Setor</label>
                         <input type="text" class="form-control" id="setor" name="setor"
-                            value="{{ session()->get('mapa_setor') }}">
+                            value="{{ session()->get('empenho_setor') }}">
                     </div>
 
                     <div class="col-12">

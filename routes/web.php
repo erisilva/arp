@@ -13,6 +13,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CotaController;
 use App\Http\Controllers\MapaController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\EmpenhoController;
 
 
 
@@ -122,3 +123,6 @@ Route::resource('/mapas', MapaController::class)->middleware('auth');
 
 # import routes
 Route::resource('/imports', ImportController::class)->middleware('auth')->only(['index', 'show', 'create', 'store']);
+
+# Empenho routes
+Route::resource('/empenhos', EmpenhoController::class)->middleware('auth');
