@@ -178,6 +178,7 @@
                                             <a href="#" class="btn btn-primary btn-sm" role="button" data-bs-toggle="modal"
                                                 data-bs-target="#modalEditarEmpenho"
                                                 data-cota-id={{ $empenho->cota_id }}
+                                                data-empenho-id={{ $empenho->id }}
                                                 data-quantidade={{ $empenho->quantidade }}>
                                                 <x-icon icon='pencil-square' />
                                             </a>
@@ -185,7 +186,9 @@
 
                                         @can('cota-delete')
                                             <a href="#" class="btn btn-danger btn-sm" role="button" data-bs-toggle="modal"
-                                                data-bs-target="#modalExcluirEmpenho" data-cota-id={{ $empenho->cota_id }}>
+                                                data-bs-target="#modalExcluirEmpenho"
+                                                data-cota-id={{ $empenho->cota_id }}
+                                                data-empenho-id={{ $empenho->id }}>
                                                 <x-icon icon='trash' />
                                             </a>
                                         @endcan
@@ -261,5 +264,95 @@
         </div>
     @endcan
 
+    @can('empenho-edit')
+        <!-- Janela para editas as quantidades da empenho -->
+        <div class="modal fade" id="modalEditarEmpenho" tabindex="-1" aria-labelledby="Editar Empenho" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"><x-icon icon='pencil-square' /> Editar Empenho</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('empenhos.update') }}">
+                            @csrf
+                            <input type="hidden" name="cota_id_editar" id="cota_id_editar" value="">
+                            <input type="hidden" id="empenho_id_editar" name="empenho_id_editar" value="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="quantidade_editar" class="form-label">Quantidade</label>
+                                    <input type="number" class="form-control" name="quantidade_editar" id="quantidade_editar"
+                                        value="" autocomplete="off" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-sm"><x-icon icon='pencil-square' />
+                                        Editar Empenho
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
+                            Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
 
+    @can('item-delete')
+        <!-- Janela para excluir empenho -->
+        <div class="modal fade" id="modalExcluirEmpenho" tabindex="-1" aria-labelledby="Excluir Empenho" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"><x-icon icon='trash' /> Excluir
+                            o empenho?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('empenhos.destroy') }}">
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="empenho_id_excluir" id="empenho_id_excluir" value="">
+                            <input type="hidden" name="cota_id_excluir" id="cota_id_excluir" value="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-danger btn-lg"><x-icon icon='exclamation-diamond' />
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><x-icon icon='x' />
+                            Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+
+@endsection
+
+@section('script-footer')
+    <script src="{{ asset('js/jquery-3.6.4.min.js') }}"></script>
+    <script>
+
+
+        $('#modalExcluirEmpenho').on('show.bs.modal', function (e) {
+            $('#empenho_id_excluir').val($(e.relatedTarget).data('empenho-id'));
+            $('#cota_id_excluir').val($(e.relatedTarget).data('cota-id'));
+        });
+
+        $('#modalEditarEmpenho').on('show.bs.modal', function (e) {
+            $('#empenho_id_editar').val($(e.relatedTarget).data('empenho-id'));
+            $('#cota_id_editar').val($(e.relatedTarget).data('cota-id'));
+            $('#quantidade_editar').val($(e.relatedTarget).data('quantidade'));
+        });
+
+    </script>
 @endsection

@@ -646,7 +646,6 @@
             $('#arp_id_editar').val($(e.relatedTarget).data('arp-id'));
             $('#cota_id_editar').val($(e.relatedTarget).data('cota-id'));
             $('#quantidade_editar').val($(e.relatedTarget).data('quantidade'));
-            $('#empenho_editar').val($(e.relatedTarget).data('empenho'));
         });
 
         var objetos = new Bloodhound({

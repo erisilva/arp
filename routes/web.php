@@ -125,4 +125,7 @@ Route::resource('/mapas', MapaController::class)->middleware('auth');
 Route::resource('/imports', ImportController::class)->middleware('auth')->only(['index', 'show', 'create', 'store']);
 
 # Empenho routes
-Route::resource('/empenhos', EmpenhoController::class)->middleware('auth');
+Route::post('/empenhos/update', [EmpenhoController::class, 'update'])->name('empenhos.update')->middleware('auth');
+Route::get('/empenhos/{empenho}', [EmpenhoController::class, 'show'])->name('empenhos.show')->middleware('auth');
+Route::post('/empenhos', [EmpenhoController::class, 'store'])->name('empenhos.store')->middleware('auth');
+Route::delete('/empenhos/destroy', [EmpenhoController::class, 'destroy'])->name('empenhos.destroy')->middleware('auth');

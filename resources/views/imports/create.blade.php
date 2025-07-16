@@ -29,7 +29,7 @@
             @csrf
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="descricao" class="form-label">{{ __('Description') }}</label>
+                    <label for="descricao" class="form-label">{{ __('Description') }} (Opcional)</label>
                     <input type="text" class="form-control @error('descricao') is-invalid @enderror" name="descricao"
                         value="{{ old('descricao') ?? '' }}">
                     @error('descricao')
@@ -41,9 +41,6 @@
                     <select class="form-select  @error('descricao') is-invalid @enderror" id="import_type" name="import_type" required>
                         <option value=''>Selecione o tipo de importação</option>
                         <option value='1'>Modelo 1 - Importar Somente Cotas</option>
-                        <option value='2'>Modelo 2 - importar Somente Empenhos</option>
-                        <option value='3'>Modelo 3 - Importar Cotas e Empenhos</option>
-                        <option value='4'>Modelo 4 - Importar Cotas e Empenhos</option>
                     </select>
                     @error('import_type')
                         <div class="invalid-feedback">{{ $message }}</div>
